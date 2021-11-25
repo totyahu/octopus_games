@@ -21,6 +21,12 @@ namespace DS {
         void updateHeight();
         void rollLeft();
         void rollRight();
+        int whoAmI();
+        void rollLL();
+        void rollRR();
+        void rollRL();
+        void rollLR();
+        void roll();
         int fix(AVLtree<T> &leaf);
 
     public:
@@ -65,6 +71,125 @@ namespace DS {
     template <class T>
     int AVLTree<T>::BF(){
         return this->leftHeight() - this->rightHeight();
+    }
+
+    template <class T>
+    void AVLTree<T>::rollLeft() {
+        if(this->right == nullptr)
+            return;
+
+        AVLTree<T> * right_left = this->right->left;
+        AVLTree<T> * old_parent = this->parent;
+        AVLTree<T> * parent_son = nullptr;
+        if(old_parent != nullptr)
+        {
+            if(old_parent->right == this)
+            {
+                parent_son=old_parent->right;
+            }
+            else
+            {
+                parent_son=old_parent->left;
+            }
+        }
+
+        this->right->left=this;
+        this->parent= this->right;
+        this->right=right_left;
+
+        if(parent_son!= nullptr)
+        {
+            parent_son= this->parent;
+            this->parent->parent=old_parent;
+        }
+        return;
+    }
+
+    template <class T>
+    void AVLTree<T>::rollRight()  {
+        if(this->left == nullptr)
+            return;
+
+        AVLTree<T> * left_right = this->left->right;
+        AVLTree<T> * old_parent = this->parent;
+        AVLTree<T> * parent_son = nullptr;
+        if(old_parent != nullptr)
+        {
+            if(old_parent->right == this)
+            {
+                parent_son=old_parent->right;
+            }
+            else
+            {
+                parent_son=old_parent->left;
+            }
+        }
+
+        this->left->right=this;
+        this->parent= this->left;
+        this->left=left_right;
+
+        if(parent_son!= nullptr)
+        {
+            parent_son= this->parent;
+            this->parent->parent=old_parent;
+        }
+        return;
+    }
+
+    template <class T>
+    int  AVLTree<T>::whoAmI()
+    {
+        if(this->parent != nullptr)
+        {
+            if(parent->right == this)
+            {
+                return RIGHT;
+            }
+            return LEFT;
+        }
+        return ROOT;
+    }
+
+    template <class T>
+    void AVLTree<T>::rollLL(){
+        this->rollRight();
+    }
+
+    template <class T>
+    void AVLTree<T>::rollRR(){
+        this->rollLeft();
+    }
+
+    template <class T>
+    void AVLTree<T>::rollRL(){
+        this->right->rollRight();
+        this->rollLeft();
+    }
+
+    template <class T>
+    void AVLTree<T>::rollLR(){
+        this->left->rollLeft();
+        this->rollRight();
+    }
+
+    template <class T>
+    void AVLTree<T>::roll(){
+        if(this->BF()==2){
+            if(this->left->BF()==1){
+                this->rollLL();
+            }
+            else{
+                this->rollLR();
+            }
+        } else{
+            if(this->right->BF()==1){
+                this->rollRL();
+            }
+            else{
+                this->rollRR();
+            }
+        }
     }
 
     template <class T>
