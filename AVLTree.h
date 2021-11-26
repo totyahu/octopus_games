@@ -5,10 +5,17 @@
 #include <cstdio>
 #include <stdexcept>
 
+#define LEFT 1
+#define ROOT 0
+#define RIGHT -1
+
+
 namespace DS {
     template <class T>
     class AVLTree
     {
+    public:
+
         T data;
         AVLTree<T> * parent;
         AVLTree<T> * right;
@@ -27,10 +34,10 @@ namespace DS {
         void rollRL();
         void rollLR();
         void roll();
-        int fix(AVLtree<T> &leaf);
+        void fix();
 
-    public:
-        AVLTree()=delete;
+//    public:
+        AVLTree() = delete;
         AVLTree(const T& data);
 //        AVLTree(const AVLTree& tree);
 //        AVLTree<T>& operator=(const AVLTree<T>& tree);
@@ -39,10 +46,12 @@ namespace DS {
         bool isLeaf();
         AVLTree<T>* find(const T& data);
         void insert(const T& data);
-        void delete(const T& data);
-
-
+        void remove(const T& data);
     };
+
+    int max(int n1, int n2){
+        return n1 >= n2 ? n1 : n2;
+    }
 
     template <class T>
     AVLTree<T>::AVLTree(const T& data):
@@ -54,18 +63,31 @@ namespace DS {
     {}
 
     template <class T>
+    AVLTree<T>::~AVLTree(){
+        if(this->left != nullptr){
+            this->left->~AVLTree();
+        }
+
+        if(this->right != nullptr){
+            this->right->~AVLTree();
+        }
+
+        delete this;
+    }
+
+    template <class T>
     bool AVLTree<T>::isLeaf(){
         return this->left == nullptr && this->right == nullptr;
     }
 
     template <class T>
     int AVLTree<T>::leftHeight(){
-        return this->left == nullptr ? 0 : this->left->height;
+        return this->left == nullptr ? -1 : this->left->height;
     }
 
     template <class T>
     int AVLTree<T>::rightHeight(){
-        return this->right == nullptr ? 0 : this->right->height;
+        return this->right == nullptr ? -1 : this->right->height;
     }
 
     template <class T>
@@ -97,12 +119,11 @@ namespace DS {
         this->parent= this->right;
         this->right=right_left;
 
-        if(parent_son!= nullptr)
+        if(parent_son != nullptr)
         {
-            parent_son= this->parent;
+            parent_son = this->parent;
             this->parent->parent=old_parent;
         }
-        return;
     }
 
     template <class T>
@@ -134,7 +155,6 @@ namespace DS {
             parent_son= this->parent;
             this->parent->parent=old_parent;
         }
-        return;
     }
 
     template <class T>
@@ -216,12 +236,12 @@ namespace DS {
 
     template <class T>
     void AVLTree<T>::insert(const T& data){
-        AVLTree<T> new_tree(data);
-
         if(data <= this->data){
             if(this->left == nullptr){
-                this->left = &new_tree;
-                new_tree.parent = this;
+                AVLTree<T>* new_tree = new AVLTree<T>(data);
+                this->left = new_tree;
+                new_tree->parent = this;
+                this->fix();
             }
             else {
                 this->left->insert(data);
@@ -229,8 +249,10 @@ namespace DS {
         }
         else {
             if(this->right == nullptr){
-                this->right = &new_tree;
-                new_tree.parent = this;
+                AVLTree<T>* new_tree = new AVLTree<T>(data);
+                this->right = new_tree;
+                new_tree->parent = this;
+                this->fix();
             }
             else {
                 this->right->insert(data);
@@ -252,6 +274,41 @@ namespace DS {
 
         this->parent->fix();
     }
+
+//    // Function to print binary tree in 2D
+//    // It does reverse inorder traversal
+//    template <class T>
+//    void print2DUtil(AVLTree<T> *root, int space)
+//    {
+//        // Base case
+//        if (root == nullprt)
+//            return;
+//
+//        // Increase distance between levels
+//        space += 10;
+//
+//        // Process right child first
+//        print2DUtil(root->right, space);
+//
+//        // Print current node after space
+//        // count
+//        cout << endl;
+//        for (int i = 10; i < space; i++)
+//            cout << " ";
+//        cout << root->data << "\n";
+//
+//        // Process left child
+//        print2DUtil(root->left, space);
+//    }
+//
+//// Wrapper over print2DUtil()
+//    template <class T>
+//    void print2D(const AVLTree<T> *root)
+//    {
+//        // Pass initial space count as 0
+//        print2DUtil(root, 0);
+//    }
+
 
 }
 
