@@ -10,16 +10,16 @@
 #define RIGHT -1
 
 
-namespace DS {
-    template <class T>
-    class AVLTree
-    {
-    public:
+using namespace std;
 
+namespace DS {
+    template<class T>
+    class TreeNode
+    {
         T data;
-        AVLTree<T> * parent;
-        AVLTree<T> * right;
-        AVLTree<T> * left;
+        TreeNode<T> * parent;
+        TreeNode<T> * right;
+        TreeNode<T> * left;
         int height;
 
         int leftHeight();
@@ -34,27 +34,77 @@ namespace DS {
         void rollRL();
         void rollLR();
         void roll();
-        void fix();
+        TreeNode<T>* fix(bool stop_at_root=false);
+        void gulag();
 
-//    public:
-        AVLTree() = delete;
-        AVLTree(const T& data);
-//        AVLTree(const AVLTree& tree);
-//        AVLTree<T>& operator=(const AVLTree<T>& tree);
-        ~AVLTree();
+        void print2DUtil(int space);
+
+    public:
+        TreeNode() = delete;
+        TreeNode(const T& data);
+//        TreeNode(const TreeNode& tree);
+//        TreeNode<T>& operator=(const TreeNode<T>& tree);
+        ~TreeNode() = default;
 
         bool isLeaf();
-        AVLTree<T>* find(const T& data);
+        TreeNode<T>* getParent();
+        TreeNode<T>* find(const T& data);
         void insert(const T& data);
-        void remove(const T& data);
+        TreeNode<T>* remove(const T& data);
+        TreeNode<T>* removeNode(const T& data);
+        void print2D();
     };
 
-    int max(int n1, int n2){
-        return n1 >= n2 ? n1 : n2;
+    template <class T>
+    class AVLTree
+    {
+        TreeNode<T>* root;
+
+    public:
+        AVLTree() = delete;
+        AVLTree(const T& data);
+        ~AVLTree() = default;
+
+        TreeNode<T>* find(const T& data);
+        void insert(const T& data);
+        void remove(const T& data);
+        void print2D();
+
+    };
+
+    template <class T>
+    AVLTree<T>::AVLTree(const T& data){
+        this->root = new TreeNode<T>(data);
     }
 
     template <class T>
-    AVLTree<T>::AVLTree(const T& data):
+    TreeNode<T>* AVLTree<T>::find(const T& data){
+
+    }
+
+    template <class T>
+    void AVLTree<T>::insert(const T& data){
+        this->root->insert(data);
+        TreeNode<T>* parent = this->root->getParent();
+        if(parent != nullptr){
+            this->root = parent;
+        }
+    }
+
+    template <class T>
+    void AVLTree<T>::remove(const T& data){
+        this->root = this->root->remove(data);
+    }
+
+    template <class T>
+    void AVLTree<T>::print2D(){
+        this->root->print2D();
+    }
+
+
+
+    template <class T>
+    TreeNode<T>::TreeNode(const T& data):
         data(data),
         parent(nullptr),
         right(nullptr),
@@ -62,103 +112,102 @@ namespace DS {
         height(0)
     {}
 
+//    template <class T>
+//    TreeNode<T>::~TreeNode(){
+//        if(this->left != nullptr){
+//            delete this->left;
+//        }
+//
+//        if(this->right != nullptr){
+//            delete this->right;
+//        }
+//
+//        delete this;
+//    }
+
     template <class T>
-    AVLTree<T>::~AVLTree(){
-        if(this->left != nullptr){
-            this->left->~AVLTree();
-        }
-
-        if(this->right != nullptr){
-            this->right->~AVLTree();
-        }
-
-        delete this;
+    TreeNode<T>* TreeNode<T>::getParent(){
+        return this->parent;
     }
 
+
     template <class T>
-    bool AVLTree<T>::isLeaf(){
+    bool TreeNode<T>::isLeaf(){
         return this->left == nullptr && this->right == nullptr;
     }
 
     template <class T>
-    int AVLTree<T>::leftHeight(){
+    int TreeNode<T>::leftHeight(){
         return this->left == nullptr ? -1 : this->left->height;
     }
 
     template <class T>
-    int AVLTree<T>::rightHeight(){
+    int TreeNode<T>::rightHeight(){
         return this->right == nullptr ? -1 : this->right->height;
     }
 
     template <class T>
-    int AVLTree<T>::BF(){
+    int TreeNode<T>::BF(){
         return this->leftHeight() - this->rightHeight();
     }
 
     template <class T>
-    void AVLTree<T>::rollLeft() {
+    void TreeNode<T>::rollLeft() {
         if(this->right == nullptr)
             return;
 
-        AVLTree<T> * right_left = this->right->left;
-        AVLTree<T> * old_parent = this->parent;
-        AVLTree<T> * parent_son = nullptr;
+        TreeNode<T> * right_left = this->right->left;
+        TreeNode<T> * old_parent = this->parent;
+        TreeNode<T> * old_son = this->right;
         if(old_parent != nullptr)
         {
-            if(old_parent->right == this)
-            {
-                parent_son=old_parent->right;
+            int who_am_i = this->whoAmI();
+            if(who_am_i == LEFT){
+                old_parent->left = old_son;
             }
-            else
-            {
-                parent_son=old_parent->left;
+            else{
+                old_parent->right = old_son;
             }
         }
 
-        this->right->left=this;
-        this->parent= this->right;
-        this->right=right_left;
+        this->right->left = this;
+        this->parent = this->right;
+        this->right = right_left;
 
-        if(parent_son != nullptr)
-        {
-            parent_son = this->parent;
-            this->parent->parent=old_parent;
-        }
+
+        this->parent->parent=old_parent;
     }
 
     template <class T>
-    void AVLTree<T>::rollRight()  {
+    void TreeNode<T>::rollRight()  {
         if(this->left == nullptr)
             return;
 
-        AVLTree<T> * left_right = this->left->right;
-        AVLTree<T> * old_parent = this->parent;
-        AVLTree<T> * parent_son = nullptr;
+        TreeNode<T> * left_right = this->left->right;
+        TreeNode<T> * old_parent = this->parent;
+        TreeNode<T> * old_son = this->left;
+
         if(old_parent != nullptr)
         {
-            if(old_parent->right == this)
-            {
-                parent_son=old_parent->right;
+            int who_am_i = this->whoAmI();
+            if(who_am_i == LEFT){
+                old_parent->left = old_son;
             }
-            else
-            {
-                parent_son=old_parent->left;
+            else{
+                old_parent->right = old_son;
             }
         }
 
-        this->left->right=this;
-        this->parent= this->left;
-        this->left=left_right;
+        this->left->right = this;
+        this->parent = this->left;
+        this->left = left_right;
 
-        if(parent_son!= nullptr)
-        {
-            parent_son= this->parent;
-            this->parent->parent=old_parent;
-        }
+
+        this->parent->parent=old_parent;
     }
 
     template <class T>
-    int  AVLTree<T>::whoAmI()
+    int  TreeNode<T>::whoAmI()
     {
         if(this->parent != nullptr)
         {
@@ -172,29 +221,29 @@ namespace DS {
     }
 
     template <class T>
-    void AVLTree<T>::rollLL(){
+    void TreeNode<T>::rollLL(){
         this->rollRight();
     }
 
     template <class T>
-    void AVLTree<T>::rollRR(){
+    void TreeNode<T>::rollRR(){
         this->rollLeft();
     }
 
     template <class T>
-    void AVLTree<T>::rollRL(){
+    void TreeNode<T>::rollRL(){
         this->right->rollRight();
         this->rollLeft();
     }
 
     template <class T>
-    void AVLTree<T>::rollLR(){
+    void TreeNode<T>::rollLR(){
         this->left->rollLeft();
         this->rollRight();
     }
 
     template <class T>
-    void AVLTree<T>::roll(){
+    void TreeNode<T>::roll(){
         if(this->BF()==2){
             if(this->left->BF()==1){
                 this->rollLL();
@@ -213,12 +262,12 @@ namespace DS {
     }
 
     template <class T>
-    void AVLTree<T>::updateHeight(){
+    void TreeNode<T>::updateHeight(){
         this->height = 1 + max(this->leftHeight(), this->rightHeight());
     }
 
     template <class T>
-    AVLTree<T>* AVLTree<T>::find(const T& data){
+    TreeNode<T>* TreeNode<T>::find(const T& data){
         if(data == this->data){
             return this;
         }
@@ -235,10 +284,10 @@ namespace DS {
     }
 
     template <class T>
-    void AVLTree<T>::insert(const T& data){
+    void TreeNode<T>::insert(const T& data){
         if(data <= this->data){
             if(this->left == nullptr){
-                AVLTree<T>* new_tree = new AVLTree<T>(data);
+                TreeNode<T>* new_tree = new TreeNode<T>(data);
                 this->left = new_tree;
                 new_tree->parent = this;
                 this->fix();
@@ -249,7 +298,7 @@ namespace DS {
         }
         else {
             if(this->right == nullptr){
-                AVLTree<T>* new_tree = new AVLTree<T>(data);
+                TreeNode<T>* new_tree = new TreeNode<T>(data);
                 this->right = new_tree;
                 new_tree->parent = this;
                 this->fix();
@@ -261,54 +310,174 @@ namespace DS {
     }
 
     template <class T>
-    void AVLTree<T>::fix(){
+    void TreeNode<T>::gulag(){
+        this->parent = nullptr;
+        this->left = nullptr;
+        this->right = nullptr;
+    }
+
+    template <class T>
+    TreeNode<T>* TreeNode<T>::removeNode(const T& data)//can return null
+    {
+        TreeNode<T>* temp = this->find(data);
+        if(temp->isLeaf()){
+            TreeNode<T>* temp_parent = temp->parent;
+
+            int who_am_i = temp->whoAmI();
+            if(who_am_i == LEFT){
+                temp_parent->left = nullptr;
+            }
+            if(who_am_i == RIGHT){
+                temp_parent->right = nullptr;
+            }
+
+            temp->gulag();
+            delete temp;
+            return temp_parent;
+        }
+
+        if(temp->left != nullptr && temp->right != nullptr){//has two sons
+            TreeNode<T>* replace = temp->right;
+            TreeNode<T>* to_return = nullptr;
+            if(replace->left == nullptr){
+                replace->left=temp->left;
+                replace->parent=temp->parent;
+
+                int who_am_i = temp->whoAmI();
+                if(who_am_i == LEFT){
+                    temp->parent->left = replace;
+                }
+                if(who_am_i == RIGHT){
+                    temp->parent->right = replace;
+                }
+                temp->gulag();
+                delete temp;
+                return replace;
+            }
+            else{
+                while(replace->left != nullptr){
+                    replace = replace->left;
+                }
+                to_return = replace->parent;
+
+                if(replace->right != nullptr){
+                    replace->right->parent = replace->parent;
+
+                }
+                replace->parent->left = replace->right;
+            }
+
+            replace->right = temp->right;
+            replace->left = temp->left;
+            temp->right->parent = replace;
+            temp->left->parent = replace;
+            replace->parent = temp->parent;
+
+            int who_am_i = temp->whoAmI();
+            if(who_am_i == LEFT){
+                temp->parent->left = replace;
+            }
+            if(who_am_i == RIGHT){
+                temp->parent->right = replace;
+            }
+
+            temp->gulag();
+            delete temp;
+            return to_return;
+        }
+
+        TreeNode<T> * temp_parent = temp->parent;
+        int who_am_i=temp->whoAmI();
+        if(temp->left != nullptr && temp->right == nullptr){
+            if(who_am_i == LEFT){
+                temp_parent->left = temp->left;
+            }
+            if(who_am_i == RIGHT){
+                temp_parent->right = temp->left;
+            }
+            temp->left->parent = temp_parent;
+
+            temp->gulag();
+            delete temp;
+            return temp_parent;
+        }
+
+        if(who_am_i == LEFT){
+            temp_parent->left = temp->right;
+        }
+        if(who_am_i==RIGHT){
+            temp_parent->right = temp->right;
+        }
+        temp->right->parent= temp_parent;
+
+        temp->gulag();
+        delete temp;
+        return temp_parent;
+    }
+
+    template <class T>
+    TreeNode<T>* TreeNode<T>::remove(const T& data){
+        TreeNode<T> * removed = this->removeNode(data);
+        return removed->fix(true);
+    }
+
+    template <class T>
+    TreeNode<T>* TreeNode<T>::fix(bool stop_at_root){
         if(abs(this->BF()) == 2){
             this->roll();
         }
 
         int oldHeight = this->height;
         this->updateHeight();
-        if(this->height == oldHeight || this->parent == nullptr){
-            return;
+        if((!stop_at_root && this->height == oldHeight) || this->parent == nullptr){
+            return this;
         }
 
-        this->parent->fix();
+        return this->parent->fix(stop_at_root);
     }
 
-//    // Function to print binary tree in 2D
-//    // It does reverse inorder traversal
-//    template <class T>
-//    void print2DUtil(AVLTree<T> *root, int space)
-//    {
-//        // Base case
-//        if (root == nullprt)
-//            return;
-//
-//        // Increase distance between levels
-//        space += 10;
-//
-//        // Process right child first
-//        print2DUtil(root->right, space);
-//
-//        // Print current node after space
-//        // count
-//        cout << endl;
-//        for (int i = 10; i < space; i++)
-//            cout << " ";
-//        cout << root->data << "\n";
-//
-//        // Process left child
-//        print2DUtil(root->left, space);
-//    }
-//
-//// Wrapper over print2DUtil()
-//    template <class T>
-//    void print2D(const AVLTree<T> *root)
-//    {
-//        // Pass initial space count as 0
-//        print2DUtil(root, 0);
-//    }
 
+    // Function to print binary tree in 2D
+    // It does reverse inorder traversal
+    template <class T>
+    void TreeNode<T>::print2DUtil(int space)
+    {
+        // Base case
+        if (this == nullptr)
+            return;
+
+        // Increase distance between levels
+        space += 10;
+
+        // Process right child first
+        if(this->right != nullptr){
+            this->right->print2DUtil(space);
+        }
+
+        // Print current node after space
+        // count
+        cout << endl;
+        for (int i = 10; i < space; i++)
+            cout << " ";
+        cout << this->data << "\n";
+
+        // Process left child
+        if(this->left != nullptr){
+            this->left->print2DUtil(space);
+        }
+    }
+
+// Wrapper over print2DUtil()
+    template <class T>
+    void TreeNode<T>::print2D()
+    {
+        // Pass initial space count as 0
+        this->print2DUtil(0);
+    }
+
+    int max(int n1, int n2){
+        return n1 >= n2 ? n1 : n2;
+    }
 
 }
 
