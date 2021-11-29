@@ -39,7 +39,7 @@ namespace DS {
         bool isLeaf();
         AVLTree<T>* find(const T& data);
         void insert(const T& data);
-        void delete(const T& data);
+        void remove(const T& data);
 
 
     };
@@ -252,6 +252,77 @@ namespace DS {
 
         this->parent->fix();
     }
+
+
+    template <class T>
+    node<T> *  AVLTree<T>::removeNode(const T& data)//can return null
+    {
+        node<T> * temp= this->find(data);
+        if(temp->isLeaf()){
+            node<T> * to_return=temp->parent;
+            delete(temp);
+            return to_return;
+        }
+
+        if(temp->left!= nullptr && temp->right!= nullptr){//has two sons
+                node<T> * replace=temp->right;
+                if(replace->left== nullptr && replace->right!= nullptr ){
+                    replace->right->parent=replace->parent;
+                    replace->parent->right=replace->right;
+                }
+                else{
+                    while( replace->left!= nullptr){
+                        replace=replace->left;
+                    }
+
+                    if(replace->right!= nullptr){
+                        replace->right->parent=replace->parent;
+
+                    }
+                    replace->parent->left=replace->right;
+                }
+
+                replace->right=temp->right;
+                replace->left=temp->left;
+                temp->right->parent=replace;
+                temp->left->parent=replace;
+                replace->parent=temp->parent;
+                delete(temp);
+                return replace;
+            }
+        node<T> * temp_parent=temp->parent;
+        int who_am_i=temp->whoAmI();
+        if(temp->left!= nullptr && temp->right== nullptr){
+            if(who_am_i==LEFT){
+                temp_parent->left=temp->left;
+            }
+            if(who_am_i==RIGHT){
+                temp_parent->right=temp->left;
+            }
+            temp->left->parent= temp_parent;
+            delete(temp)
+            return temp_parent;
+        }
+
+        if(who_am_i==LEFT){
+            temp_parent->left=temp->right;
+        }
+        if(who_am_i==RIGHT){
+            temp_parent->right=temp->right;
+        }
+        temp->right->parent= temp_parent;
+        delete(temp)
+        return temp_parent;
+    }
+
+    template <class T>
+    void AVLTree<T>::remove(const T& data)
+    {
+
+
+    }
+
+
 
 }
 
