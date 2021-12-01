@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace DS {
+namespace WET1 {
     template<class T>
     class TreeNode {
         T data;
@@ -23,70 +23,41 @@ namespace DS {
         int height;
 
         int leftHeight() const;
-
         int rightHeight() const;
-
         int BF() const;
-
         void updateHeight();
-
         void rollLeft();
-
         void rollRight();
-
         int whoAmI() const;
-
         void rollLL();
-
         void rollRR();
-
         void rollRL();
-
         void rollLR();
-
         void roll();
-
         TreeNode<T> *fix(bool stop_at_root = false);
-
         void gulag();
-
-        void toSortedArray(T dist_arr[]) const;
-
         void toSortedArrayAux(T dist_arr[], int *idx) const;
-
+        static TreeNode<T> *arrayToTreeAux(const T *sortedArr, int startIdx, int size, TreeNode<T> *parent);
         void print2DUtil(int space) const;
 
     public:
         TreeNode() = delete;
-
         explicit TreeNode(const T &data);
-
 //        TreeNode(const TreeNode& tree);
 //        TreeNode<T>& operator=(const TreeNode<T>& tree);
         ~TreeNode();
 
         bool isLeaf() const;
-
         T &getData() const;
-
         TreeNode<T> *getParent() const;
-
         TreeNode<T> *find(const T &data) const;
-
         void insert(const T &data);
-
         TreeNode<T> *remove(const T &data);
-
         TreeNode<T> *removeNode(const T &data);
-
-        T &getMax() const;
-
+        T& getMax() const;
+        void toSortedArray(T dist_arr[]) const;
         static TreeNode<T> *arrayToTree(const T *sortedArr, int size);
-
-        static TreeNode<T> *arrayToTreeAux(const T *sortedArr, int startIdx, int size, TreeNode<T> *parent);
-
         static TreeNode<T> *merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2);
-
         void print2D() const;
     };
 

@@ -1,7 +1,7 @@
 #ifndef OCTOPUS_GAMES_UTILS_H
 #define OCTOPUS_GAMES_UTILS_H
 
-namespace DS {
+namespace WET1 {
     class Utils {
     public:
         template<class T>

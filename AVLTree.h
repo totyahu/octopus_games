@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace DS {
+namespace WET1 {
 
     template<class T>
     class AVLTree {
@@ -23,25 +23,17 @@ namespace DS {
 
     public:
         AVLTree();
-
         explicit AVLTree(const T &data);
-
         AVLTree(TreeNode<T> *tree, int size);
-
         ~AVLTree();
-
         T *find(const T &data) const;
-
         bool exists(const T &data) const;
-
         void insert(const T &data);
-
         void remove(const T &data);
-
-        T &getMax() const;
-
+        T& getMax() const;
+        int getSize() const;
+        void toSortedArray(T dist_arr[]) const;
         static AVLTree<T> *merge(const AVLTree<T> *tree1, const AVLTree<T> *tree2);
-
         void print2D() const;
     };
 
@@ -103,10 +95,26 @@ namespace DS {
     }
 
     template<class T>
+    void AVLTree<T>::toSortedArray(T dist_arr[]) const{
+        this->root->toSortedArray(dist_arr);
+    }
+
+    template<class T>
     AVLTree<T>* AVLTree<T>::merge(const AVLTree<T> *tree1, const AVLTree<T> *tree2) {
         TreeNode<T> *new_tree = TreeNode<T>::merge(tree1->root, tree2->root, tree1->size, tree2->size);
         return new AVLTree<T>(new_tree, tree1->size + tree2->size);
     }
+
+    template<class T>
+    T& AVLTree<T>::getMax() const{
+        return this->root->getMax();
+    }
+
+    template<class T>
+    int AVLTree<T>::getSize() const{
+        return this->size;
+    }
+
 
     template<class T>
     void AVLTree<T>::print2D() const {

@@ -4,4 +4,4 @@ project(octopus_games)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(octopus_games main.cpp AVLTree.h Utils.h TreeNode.h)
+add_executable(octopus_games main.cpp AVLTree.h Utils.h TreeNode.h Utils.h)
