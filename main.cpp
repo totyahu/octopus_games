@@ -32,7 +32,7 @@ int main() {
 
     t2.print2D();
 
-    AVLTree<int>* t3 = AVLTree<int>::merge(&t1, &t2);
+    AVLTree<int> *t3 = AVLTree<int>::merge(&t1, &t2);
 
     cout << "------------------------------------------" << endl;
 
