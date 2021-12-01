@@ -19,24 +19,28 @@ int main() {
     t1.insert(9);
     t1.insert(16);
 
-    AVLTree<int> t2(8);
-    t2.insert(7);
-    t2.insert(12);
-    t2.insert(14);
-    t2.insert(15);
+//    AVLTree<int> t2(8);
+    AVLTree<int>* t2 = new AVLTree<int>(8);
+    t2->insert(7);
+    t2->insert(12);
+    t2->insert(14);
+    t2->insert(15);
 
 
     t1.print2D();
 
     cout << "------------------------------------------" << endl;
 
-    t2.print2D();
+    t2->print2D();
 
-    AVLTree<int> *t3 = AVLTree<int>::merge(&t1, &t2);
+    AVLTree<int> *t3 = AVLTree<int>::merge(&t1, t2);
 
     cout << "------------------------------------------" << endl;
 
     t3->print2D();
+
+//    delete t2;
+//    delete t3;
 
     return 0;
 }

@@ -28,7 +28,7 @@ namespace DS {
 
         AVLTree(TreeNode<T> *tree, int size);
 
-        ~AVLTree() = default;
+        ~AVLTree();
 
         T *find(const T &data) const;
 
@@ -43,7 +43,6 @@ namespace DS {
         static AVLTree<T> *merge(const AVLTree<T> *tree1, const AVLTree<T> *tree2);
 
         void print2D() const;
-
     };
 
 //    AVLTree implementation
@@ -61,6 +60,12 @@ namespace DS {
 
     template<class T>
     AVLTree<T>::AVLTree(TreeNode<T> *tree, int size): root(tree), size(size) {}
+
+    template<class T>
+    AVLTree<T>::~AVLTree(){
+        delete this->root;
+    }
+
 
 
     template<class T>
@@ -98,7 +103,7 @@ namespace DS {
     }
 
     template<class T>
-    AVLTree<T> *AVLTree<T>::merge(const AVLTree<T> *tree1, const AVLTree<T> *tree2) {
+    AVLTree<T>* AVLTree<T>::merge(const AVLTree<T> *tree1, const AVLTree<T> *tree2) {
         TreeNode<T> *new_tree = TreeNode<T>::merge(tree1->root, tree2->root, tree1->size, tree2->size);
         return new AVLTree<T>(new_tree, tree1->size + tree2->size);
     }

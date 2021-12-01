@@ -15,55 +15,80 @@ using namespace std;
 
 namespace DS {
     template<class T>
-    class TreeNode
-    {
+    class TreeNode {
         T data;
-        TreeNode<T> * parent;
-        TreeNode<T> * right;
-        TreeNode<T> * left;
+        TreeNode<T> *parent;
+        TreeNode<T> *right;
+        TreeNode<T> *left;
         int height;
 
         int leftHeight() const;
+
         int rightHeight() const;
+
         int BF() const;
+
         void updateHeight();
+
         void rollLeft();
+
         void rollRight();
+
         int whoAmI() const;
+
         void rollLL();
+
         void rollRR();
+
         void rollRL();
+
         void rollLR();
+
         void roll();
-        TreeNode<T>* fix(bool stop_at_root=false);
+
+        TreeNode<T> *fix(bool stop_at_root = false);
+
         void gulag();
 
         void toSortedArray(T dist_arr[]) const;
-        void toSortedArrayAux(T dist_arr[], int* idx) const;
+
+        void toSortedArrayAux(T dist_arr[], int *idx) const;
 
         void print2DUtil(int space) const;
 
     public:
         TreeNode() = delete;
-        explicit TreeNode(const T& data);
+
+        explicit TreeNode(const T &data);
+
 //        TreeNode(const TreeNode& tree);
 //        TreeNode<T>& operator=(const TreeNode<T>& tree);
-        ~TreeNode() = default;
+        ~TreeNode();
 
         bool isLeaf() const;
-        T& getData() const;
-        TreeNode<T>* getParent() const;
-        TreeNode<T>* find(const T& data) const;
-        void insert(const T& data);
-        TreeNode<T>* remove(const T& data);
-        TreeNode<T>* removeNode(const T& data);
-        T& getMax() const;
-        static TreeNode<T>* arrayToTree(const T* sortedArr, int size);
-        static TreeNode<T>* arrayToTreeAux(const T* sortedArr, int startIdx, int size);
-        static TreeNode<T>* merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2);
+
+        T &getData() const;
+
+        TreeNode<T> *getParent() const;
+
+        TreeNode<T> *find(const T &data) const;
+
+        void insert(const T &data);
+
+        TreeNode<T> *remove(const T &data);
+
+        TreeNode<T> *removeNode(const T &data);
+
+        T &getMax() const;
+
+        static TreeNode<T> *arrayToTree(const T *sortedArr, int size);
+
+        static TreeNode<T> *arrayToTreeAux(const T *sortedArr, int startIdx, int size, TreeNode<T> *parent);
+
+        static TreeNode<T> *merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2);
+
         void print2D() const;
     };
-
 
     template <class T>
     TreeNode<T>::TreeNode(const T& data):
@@ -73,6 +98,23 @@ namespace DS {
             left(nullptr),
             height(0)
     {}
+
+    template <class T>
+    TreeNode<T>::~TreeNode(){
+        if(this->left != nullptr){
+            delete this->left;
+        }
+
+        if(this->right != nullptr){
+            delete this->right;
+        }
+
+//        cout << "after delete left & right: " << endl;
+//        cout << this->data << endl;
+
+        T* tmp = &(this->data);
+        delete tmp;
+    }
 
     template <class T>
     TreeNode<T>* TreeNode<T>::getParent() const{
@@ -215,7 +257,7 @@ namespace DS {
 
     template <class T>
     void TreeNode<T>::updateHeight(){
-        this->height = 1 + max(this->leftHeight(), this->rightHeight());
+        this->height = 1 + Utils::max(this->leftHeight(), this->rightHeight());
     }
 
     template <class T>
@@ -388,6 +430,13 @@ namespace DS {
     }
 
 
+    template <class T>
+    T& TreeNode<T>::getMax() const{
+        if(this->right == nullptr){
+            return new T(this->data);
+        }
+        return this-right->getMax();
+    }
 
     template <class T>
     void TreeNode<T>::toSortedArray(T dist_arr[]) const{
@@ -423,23 +472,23 @@ namespace DS {
 
     template <class T>
     TreeNode<T>* TreeNode<T>::arrayToTree(const T* sortedArr, int size){
-        return arrayToTreeAux(sortedArr, 0, size);
+        return arrayToTreeAux(sortedArr, 0, size, nullptr);
     }
 
     template <class T>
-    TreeNode<T>* TreeNode<T>::arrayToTreeAux(const T* sortedArr, int startIdx, int size){
+    TreeNode<T>* TreeNode<T>::arrayToTreeAux(const T* sortedArr, int startIdx, int size, TreeNode<T>* parent){
         if(size == 0){
             return nullptr;
         }
 
-
         int mid = (size - 1) / 2 + startIdx;
         TreeNode<T>* sub_root = new TreeNode<T>(sortedArr[mid]);
+        sub_root->parent = parent;
 
         int half_size = size / 2;
-        bool is_odd_size = size % 2;
-        sub_root->left = TreeNode<T>::arrayToTreeAux(sortedArr, startIdx, is_odd_size ? half_size : half_size -1);
-        sub_root->right = TreeNode<T>::arrayToTreeAux(sortedArr, mid + 1, half_size);
+        int left_size = size % 2 == 0 ? half_size - 1 : half_size;
+        sub_root->left = TreeNode<T>::arrayToTreeAux(sortedArr, startIdx, left_size, sub_root);
+        sub_root->right = TreeNode<T>::arrayToTreeAux(sortedArr, mid + 1, half_size, sub_root);
         sub_root->updateHeight();
 
         return sub_root;
@@ -477,8 +526,7 @@ namespace DS {
 
 // Wrapper over print2DUtil()
     template <class T>
-    void TreeNode<T>::print2D() const
-    {
+    void TreeNode<T>::print2D() const{
         // Pass initial space count as 0
         this->print2DUtil(0);
     }
