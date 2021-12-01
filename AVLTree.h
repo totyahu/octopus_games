@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdio>
 #include <stdexcept>
+#include "./Utils.h"
 
 #define LEFT 1
 #define ROOT 0
@@ -22,13 +23,13 @@ namespace DS {
         TreeNode<T> * left;
         int height;
 
-        int leftHeight();
-        int rightHeight();
-        int BF();
+        int leftHeight() const;
+        int rightHeight() const;
+        int BF() const;
         void updateHeight();
         void rollLeft();
         void rollRight();
-        int whoAmI();
+        int whoAmI() const;
         void rollLL();
         void rollRR();
         void rollRL();
@@ -37,71 +38,117 @@ namespace DS {
         TreeNode<T>* fix(bool stop_at_root=false);
         void gulag();
 
-        void print2DUtil(int space);
+        void toSortedArray(T dist_arr[]) const;
+        void toSortedArrayAux(T dist_arr[], int* idx) const;
+
+        void print2DUtil(int space) const;
 
     public:
         TreeNode() = delete;
-        TreeNode(const T& data);
+        explicit TreeNode(const T& data);
 //        TreeNode(const TreeNode& tree);
 //        TreeNode<T>& operator=(const TreeNode<T>& tree);
         ~TreeNode() = default;
 
-        bool isLeaf();
-        TreeNode<T>* getParent();
-        TreeNode<T>* find(const T& data);
+        bool isLeaf() const;
+        T& getData() const;
+        TreeNode<T>* getParent() const;
+        TreeNode<T>* find(const T& data) const;
         void insert(const T& data);
         TreeNode<T>* remove(const T& data);
         TreeNode<T>* removeNode(const T& data);
-        void print2D();
+        T& getMax() const;
+        static TreeNode<T>* arrayToTree(const T* sortedArr, int size);
+        static TreeNode<T>* arrayToTreeAux(const T* sortedArr, int startIdx, int size);
+        static TreeNode<T>* merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2);
+        void print2D() const;
     };
 
     template <class T>
     class AVLTree
     {
         TreeNode<T>* root;
+        int size;
 
     public:
-        AVLTree() = delete;
-        AVLTree(const T& data);
+        AVLTree();
+        explicit AVLTree(const T& data);
+        AVLTree(TreeNode<T>* tree, int size);
         ~AVLTree() = default;
 
-        TreeNode<T>* find(const T& data);
+        T* find(const T& data) const;
+        bool exists(const T& data) const;
         void insert(const T& data);
         void remove(const T& data);
-        void print2D();
+        T& getMax() const;
+        static AVLTree<T>* merge(const AVLTree<T>* tree1, const AVLTree<T>* tree2);
+        void print2D() const;
 
     };
+
+//    AVLTree implementation
+    template <class T>
+    AVLTree<T>::AVLTree(){
+        this->root = nullptr;
+        this->size = 0;
+    }
 
     template <class T>
     AVLTree<T>::AVLTree(const T& data){
         this->root = new TreeNode<T>(data);
+        this->size = 1;
     }
 
     template <class T>
-    TreeNode<T>* AVLTree<T>::find(const T& data){
+    AVLTree<T>::AVLTree(TreeNode<T>* tree, int size): root(tree), size(size){}
 
+
+    template <class T>
+    T* AVLTree<T>::find(const T& data) const{
+        TreeNode<T>* res = this->root->find(data);
+        if(res == nullptr){
+            return nullptr;
+        }
+        return &(this->root->find(data)->getData());
+    }
+
+    template <class T>
+    bool AVLTree<T>::exists(const T& data) const{
+        return this->root->find(data) != nullptr;
     }
 
     template <class T>
     void AVLTree<T>::insert(const T& data){
-        this->root->insert(data);
-        TreeNode<T>* parent = this->root->getParent();
-        if(parent != nullptr){
-            this->root = parent;
+        this->size += 1;
+        if(this->root == nullptr){
+            this->root = new TreeNode<T>(data);
+        }
+        else {
+            this->root->insert(data);
+            TreeNode<T>* parent = this->root->getParent();
+            if(parent != nullptr){
+                this->root = parent;
+            }
         }
     }
 
     template <class T>
     void AVLTree<T>::remove(const T& data){
+        this->size -= 1;
         this->root = this->root->remove(data);
     }
 
     template <class T>
-    void AVLTree<T>::print2D(){
-        this->root->print2D();
+    AVLTree<T>* AVLTree<T>::merge(const AVLTree<T>* tree1, const AVLTree<T>* tree2){
+        TreeNode<T>* new_tree = TreeNode<T>::merge(tree1->root, tree2->root, tree1->size, tree2->size);
+        return new AVLTree<T>(new_tree, tree1->size + tree2->size);
     }
 
-
+//    TreeNode implementation
+    template <class T>
+    void AVLTree<T>::print2D() const{
+        this->root->print2D();
+    }
 
     template <class T>
     TreeNode<T>::TreeNode(const T& data):
@@ -112,47 +159,38 @@ namespace DS {
         height(0)
     {}
 
-//    template <class T>
-//    TreeNode<T>::~TreeNode(){
-//        if(this->left != nullptr){
-//            delete this->left;
-//        }
-//
-//        if(this->right != nullptr){
-//            delete this->right;
-//        }
-//
-//        delete this;
-//    }
-
     template <class T>
-    TreeNode<T>* TreeNode<T>::getParent(){
+    TreeNode<T>* TreeNode<T>::getParent() const{
         return this->parent;
     }
 
+    template <class T>
+    T& TreeNode<T>::getData() const{
+        return new T(this->data);
+    }
 
     template <class T>
-    bool TreeNode<T>::isLeaf(){
+    bool TreeNode<T>::isLeaf() const{
         return this->left == nullptr && this->right == nullptr;
     }
 
     template <class T>
-    int TreeNode<T>::leftHeight(){
+    int TreeNode<T>::leftHeight() const{
         return this->left == nullptr ? -1 : this->left->height;
     }
 
     template <class T>
-    int TreeNode<T>::rightHeight(){
+    int TreeNode<T>::rightHeight() const{
         return this->right == nullptr ? -1 : this->right->height;
     }
 
     template <class T>
-    int TreeNode<T>::BF(){
+    int TreeNode<T>::BF() const{
         return this->leftHeight() - this->rightHeight();
     }
 
     template <class T>
-    void TreeNode<T>::rollLeft() {
+    void TreeNode<T>::rollLeft(){
         if(this->right == nullptr)
             return;
 
@@ -179,7 +217,7 @@ namespace DS {
     }
 
     template <class T>
-    void TreeNode<T>::rollRight()  {
+    void TreeNode<T>::rollRight(){
         if(this->left == nullptr)
             return;
 
@@ -207,8 +245,7 @@ namespace DS {
     }
 
     template <class T>
-    int  TreeNode<T>::whoAmI()
-    {
+    int  TreeNode<T>::whoAmI() const{
         if(this->parent != nullptr)
         {
             if(parent->right == this)
@@ -267,7 +304,7 @@ namespace DS {
     }
 
     template <class T>
-    TreeNode<T>* TreeNode<T>::find(const T& data){
+    TreeNode<T>* TreeNode<T>::find(const T& data) const{
         if(data == this->data){
             return this;
         }
@@ -317,8 +354,7 @@ namespace DS {
     }
 
     template <class T>
-    TreeNode<T>* TreeNode<T>::removeNode(const T& data)//can return null
-    {
+    TreeNode<T>* TreeNode<T>::removeNode(const T& data){ //can return null
         TreeNode<T>* temp = this->find(data);
         if(temp->isLeaf()){
             TreeNode<T>* temp_parent = temp->parent;
@@ -437,10 +473,67 @@ namespace DS {
     }
 
 
+
+    template <class T>
+    void TreeNode<T>::toSortedArray(T dist_arr[]) const{
+        int idx = 0;
+        return this->toSortedArrayAux(dist_arr, &idx);
+    }
+
+    template <class T>
+    void TreeNode<T>::toSortedArrayAux(T dist_arr[], int* idx) const{
+        if(this->left != nullptr){
+            this->left->toSortedArrayAux(dist_arr, idx);
+        }
+
+        dist_arr[(*idx)++] = this->data;
+
+        if(this->right != nullptr){
+            this->right->toSortedArrayAux(dist_arr, idx);
+        }
+    }
+
+    template <class T>
+    TreeNode<T>* TreeNode<T>::merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2){
+        T arr1[size1];
+        T arr2[size2];
+
+        tree1->toSortedArray(arr1);
+        tree2->toSortedArray(arr2);
+
+        T* arr_merge = Utils::mergeArrays(arr1, arr2, size1, size2);
+
+        return TreeNode<T>::arrayToTree(arr_merge, size1 + size2);
+    }
+
+    template <class T>
+    TreeNode<T>* TreeNode<T>::arrayToTree(const T* sortedArr, int size){
+        return arrayToTreeAux(sortedArr, 0, size);
+    }
+
+    template <class T>
+    TreeNode<T>* TreeNode<T>::arrayToTreeAux(const T* sortedArr, int startIdx, int size){
+        if(size == 0){
+            return nullptr;
+        }
+
+
+        int mid = (size - 1) / 2 + startIdx;
+        TreeNode<T>* sub_root = new TreeNode<T>(sortedArr[mid]);
+
+        int half_size = size / 2;
+        bool is_odd_size = size % 2;
+        sub_root->left = TreeNode<T>::arrayToTreeAux(sortedArr, startIdx, is_odd_size ? half_size : half_size -1);
+        sub_root->right = TreeNode<T>::arrayToTreeAux(sortedArr, mid + 1, half_size);
+        sub_root->updateHeight();
+
+        return sub_root;
+    }
+
     // Function to print binary tree in 2D
     // It does reverse inorder traversal
     template <class T>
-    void TreeNode<T>::print2DUtil(int space)
+    void TreeNode<T>::print2DUtil(int space) const
     {
         // Base case
         if (this == nullptr)
@@ -469,7 +562,7 @@ namespace DS {
 
 // Wrapper over print2DUtil()
     template <class T>
-    void TreeNode<T>::print2D()
+    void TreeNode<T>::print2D() const
     {
         // Pass initial space count as 0
         this->print2DUtil(0);
