@@ -10,7 +10,7 @@ GameManager::GameManager(){
     this->players_by_level=new AVLTree<PlayerByLevel>;
     this->groups=new AVLTree<Group>;
     this->best_player= nullptr;
-};
+}
 
 GameManager * GameManager::Init() {
     return new GameManager;
@@ -150,7 +150,6 @@ StatusType GameManager::ReplaceGroup(int GroupID, int ReplacementID){
         return ALLOCATION_ERROR;
     }
     return SUCCESS;
-
 }
 
 StatusType GameManager::GetAllPlayersByLevel(int GroupID, int **Players, int *numOfPlayers){
@@ -160,8 +159,8 @@ StatusType GameManager::GetAllPlayersByLevel(int GroupID, int **Players, int *nu
 
     if(groupID < 0){
         *numOfPlayers = this->players_by_level->getSize();
-        int** Players = new int[*numOfPlayers];
-        this->players_by_level->toSortedArray(*Players);
+        *Players = new int[*numOfPlayers];
+        this->players_by_level->toSortedArray(*Players); //TODO: add a temp array of players then put ids in players array
         return SUCCESS;
     }
 
@@ -171,20 +170,31 @@ StatusType GameManager::GetAllPlayersByLevel(int GroupID, int **Players, int *nu
     }
 
     *numOfPlayers = group->players_by_level->getSize();
-    int** Players = new int[*numOfPlayers];
+    *Players = new int[*numOfPlayers];
     group->group_players->toSortedArray(*Players);
     return SUCCESS;
 }
 
+bool isGroupEmpty(Group* group){
+    return group->isEmpty()
+}
 
 StatusType GameManager::GetGroupsHighestLevel(int numOfGroups, int **Players){
     if(Players == nullptr || numOfGroups < 1){
         return INVALID_INPUT;
     }
 
+    PlayersByLevel *filteredPlayers = new PlayersByLevel[numOfGroups];
+    if(!this->groups->query(filteredPlayers, isGroupEmpty, numOfGroups)){
+        return FAILURE;
+    }
 
+    *Players = new int[numOfGroups];
+    for(int i = 0; i < numOfGroups; i++){
+        *Players[i] = filteredPlayers[i].best_player->player_id;
+    }
 
-    int** Players = new int[numOfGroups];
+    return SUCCESS;
 }
 
 
@@ -198,7 +208,9 @@ void GameManager::Quit(){
 
 Group* GameManager::findGroupById(int groupId){
     Group* tmp = new Group(groupId);
-    return this->groups->find(*tmp);
+    Group* res = this->groups->find(*tmp);
+    delete tmp;
+    return res;
 }
 
 

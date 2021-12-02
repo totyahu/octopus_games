@@ -48,17 +48,36 @@ namespace WET1 {
         ~TreeNode();
 
         bool isLeaf() const;
-        T &getData() const;
+        T* getData() const;
         TreeNode<T> *getParent() const;
-        TreeNode<T> *find(const T &data) const;
+        TreeNode<T> *find(const T &data);
         void insert(const T &data);
         TreeNode<T> *remove(const T &data);
         TreeNode<T> *removeNode(const T &data);
-        T& getMax() const;
+        T* getMax() const;
         void toSortedArray(T dist_arr[]) const;
         static TreeNode<T> *arrayToTree(const T *sortedArr, int size);
         static TreeNode<T> *merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2);
         void print2D() const;
+
+        template <typename P>
+        void query(P pred, T* dest_arr, int size, int* found){
+            if(*found >= size){
+                return;
+            }
+
+            if(this->left != nullptr){
+                return this->left->query(pred, dest_arr, size, found);
+            }
+
+            if(pred(this->data)){
+                dest_arr[(*found)++] = this->data;
+            }
+
+            if(this->right != nullptr){
+                return this->right->query(pred, dest_arr, size, found);
+            }
+        }
     };
 
     template <class T>
@@ -93,7 +112,7 @@ namespace WET1 {
     }
 
     template <class T>
-    T& TreeNode<T>::getData() const{
+    T* TreeNode<T>::getData() const{
         return new T(this->data);
     }
 
@@ -232,8 +251,8 @@ namespace WET1 {
     }
 
     template <class T>
-    TreeNode<T>* TreeNode<T>::find(const T& data) const{
-        if(data == this->data){
+    TreeNode<T>* TreeNode<T>::find(const T& data){
+        if(this->data == data){
             return this;
         }
 
@@ -241,7 +260,7 @@ namespace WET1 {
             return nullptr;
         }
 
-        if(data < this->data){
+        if(!(this->data < data)){
             return this->left->find(data);
         }
 
@@ -250,7 +269,7 @@ namespace WET1 {
 
     template <class T>
     void TreeNode<T>::insert(const T& data){
-        if(data <= this->data){
+        if(!(this->data < data)){
             if(this->left == nullptr){
                 TreeNode<T>* new_tree = new TreeNode<T>(data);
                 this->left = new_tree;
@@ -296,7 +315,6 @@ namespace WET1 {
             }
 
             temp->gulag();
-            delete temp;
             return temp_parent;
         }
 
@@ -402,7 +420,7 @@ namespace WET1 {
 
 
     template <class T>
-    T& TreeNode<T>::getMax() const{
+    T* TreeNode<T>::getMax() const{
         if(this->right == nullptr){
             return new T(this->data);
         }
@@ -465,6 +483,7 @@ namespace WET1 {
         return sub_root;
     }
 
+
     // Function to print binary tree in 2D
     // It does reverse inorder traversal
     template <class T>
@@ -501,11 +520,6 @@ namespace WET1 {
         // Pass initial space count as 0
         this->print2DUtil(0);
     }
-
-    int max(int n1, int n2){
-        return n1 >= n2 ? n1 : n2;
-    }
-
 
 }
 

@@ -52,7 +52,7 @@ int Group::getHighestLevel(){
     return this->best_player->getIdPlayer();
 }
 bool Group::isEmpty(){
-    return (this->best_player== nullptr);
+    return (this->best_player == nullptr);
 }
 
 bool Group::mergeGroup(Group* other_group){
