@@ -30,12 +30,18 @@ namespace WET1 {
         bool exists(const T &data) const;
         void insert(const T &data);
         void remove(const T &data);
-        T& getMax() const;
+        T* getMax() const;
         int getSize() const;
         void toSortedArray(T dist_arr[]) const;
         static AVLTree<T>* merge(const AVLTree<T> *tree1, const AVLTree<T> *tree2);
-//        static void query(condition, dest_arr);
         void print2D() const;
+
+        template<typename P>
+        bool query(T* dest_arr, P pred, int find_size){
+            int found = 0;
+            this->root->query(pred, dest_arr, find_size, &found);
+            return found == find_size;
+        }
     };
 
 //    AVLTree implementation
@@ -60,14 +66,13 @@ namespace WET1 {
     }
 
 
-
     template<class T>
     T *AVLTree<T>::find(const T &data) const {
         TreeNode<T> *res = this->root->find(data);
         if (res == nullptr) {
             return nullptr;
         }
-        return &(this->root->find(data)->getData());
+        return this->root->find(data)->getData();
     }
 
     template<class T>
@@ -107,7 +112,7 @@ namespace WET1 {
     }
 
     template<class T>
-    T& AVLTree<T>::getMax() const{
+    T* AVLTree<T>::getMax() const{
         return this->root->getMax();
     }
 
@@ -115,7 +120,6 @@ namespace WET1 {
     int AVLTree<T>::getSize() const{
         return this->size;
     }
-
 
     template<class T>
     void AVLTree<T>::print2D() const {

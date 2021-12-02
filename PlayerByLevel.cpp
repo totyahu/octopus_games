@@ -10,7 +10,7 @@ player_id(player_id),player_level(player_level){
     this->player_group = player_group;
 }
 
-bool PlayerByLevel::operator<(const PlayerByLevel& other_player) {
+bool PlayerByLevel::operator<(const PlayerByLevel& other_player) const {
     if(this->player_level == other_player.player_level){
      return this->player_id > other_player.player_id;
     }
@@ -24,7 +24,7 @@ PlayerByLevel& PlayerByLevel::operator=(const PlayerByLevel& player){
     return *this;
 }
 
-bool PlayerByLevel::operator==(const PlayerByLevel &other_player) {
+bool PlayerByLevel::operator==(const PlayerByLevel &other_player)const {
     return (this->player_id == other_player.player_id);
 }
 
@@ -44,4 +44,20 @@ int PlayerByLevel::getLevelPlayer() {
     return this->player_level;
 }
 
+
+namespace WET1
+{
+    ostream& operator<<(std::ostream& os,const PlayerByLevel& player)
+    {
+        if(player.player_group!= nullptr)
+        {
+            return os <<"Pl, "<< "i: "<< player.player_id
+            <<",l: "<<player.player_level<<",g_i: "<< player.player_group->getId() <<endl;
+        }
+        return os <<"Pl,"<< "i: "<< player.player_id
+        <<",l: "<<player.player_level<<", No group "<<endl;
+
+    }
+
+}
 

@@ -61,13 +61,24 @@ bool Group::mergeGroup(Group* other_group){
     if(merged_tree == nullptr){
         return false;
     }
-
     AVLTree<PlayerByLevel>* tmp1 = this->group_players;
     AVLTree<PlayerByLevel>* tmp2 = other_group->group_players;
     this->group_players = merged_tree;
 
-    delete tmp1;
-    delete tmp2;
-    return true
+    return true;
+}
+
+int Group::getId() {
+    return this->group_id;
+}
+
+void Group::printPlayers(){
+    cout<<"Group id: "<<this->group_id<<endl;
+    if(!this->isEmpty()){
+        cout<<"Best player by level is:"<< this->best_player->getIdPlayer()<<endl;
+    }else{
+        cout<<"no players"<<endl;
+    }
+    this->group_players->print2D();
 }
 

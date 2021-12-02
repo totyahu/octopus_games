@@ -24,7 +24,7 @@ namespace WET1{
         PlayerByLevel * best_player;
 
     public:
-        GameManager();
+        explicit GameManager();
         GameManager *Init();
         StatusType AddGroup(int GroupID);
         StatusType AddPlayer( int PlayerID, int GroupID, int Level);
@@ -35,9 +35,8 @@ namespace WET1{
         StatusType GetAllPlayersByLevel(int GroupID, int **Players, int *numOfPlayers);
         StatusType GetGroupsHighestLevel(int numOfGroups, int **Players);
         void Quit();
-
-
         Group* findGroupById(int groupId);
+        void printGame();
     };
 }
 #endif //GAMEMANAGER_H
