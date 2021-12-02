@@ -12,7 +12,7 @@
 
 using namespace std;
 
-namespace DS {
+namespace WET1 {
     template<class T>
     class TreeNode
     {
@@ -52,6 +52,7 @@ namespace DS {
         void insert(const T& data);
         TreeNode<T>* remove(const T& data);
         TreeNode<T>* removeNode(const T& data);
+        T& getData() const;
         void print2D();
     };
 
@@ -61,13 +62,14 @@ namespace DS {
         TreeNode<T>* root;
 
     public:
-        AVLTree() = delete;
+        AVLTree()=default;
         AVLTree(const T& data);
         ~AVLTree() = default;
 
-        TreeNode<T>* find(const T& data);
+        T* find(const T& data);
         void insert(const T& data);
         void remove(const T& data);
+        TreeNode<T>* exists(const T& data);
         void print2D();
 
     };
@@ -78,8 +80,8 @@ namespace DS {
     }
 
     template <class T>
-    TreeNode<T>* AVLTree<T>::find(const T& data){
-
+    T& TreeNode<T>::getData() const{
+        return new T(this->data);
     }
 
     template <class T>
@@ -284,6 +286,15 @@ namespace DS {
     }
 
     template <class T>
+    T* AVLTree<T>::find(const T& data){
+        TreeNode<T>* res = this->root->find(data);
+        if(res == nullptr){
+            return nullptr;
+        }
+        return &(this->root->find(data)->getData());
+    }
+
+    template <class T>
     void TreeNode<T>::insert(const T& data){
         if(data <= this->data){
             if(this->left == nullptr){
@@ -477,6 +488,11 @@ namespace DS {
 
     int max(int n1, int n2){
         return n1 >= n2 ? n1 : n2;
+    }
+
+    template <class T>
+    TreeNode<T>* AVLTree<T>::exists(const T& data){
+        return this->root->find(data) != nullptr;
     }
 
 }

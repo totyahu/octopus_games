@@ -1,7 +1,7 @@
 #include <iostream>
 #include "AVLTree.h"
 
-using namespace DS;
+using namespace WET1;
 using namespace std;
 
 
