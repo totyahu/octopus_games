@@ -176,6 +176,26 @@ StatusType GameManager::GetAllPlayersByLevel(int GroupID, int **Players, int *nu
     return SUCCESS;
 }
 
+
+StatusType GameManager::GetGroupsHighestLevel(int numOfGroups, int **Players){
+    if(Players == nullptr || numOfGroups < 1){
+        return INVALID_INPUT;
+    }
+
+
+
+    int** Players = new int[numOfGroups];
+}
+
+
+void GameManager::Quit(){
+    delete this->groups;
+    delete this->players_by_id;
+    delete this->players_by_level;
+    delete this->best_player;
+}
+
+
 Group* GameManager::findGroupById(int groupId){
     Group* tmp = new Group(groupId);
     return this->groups->find(*tmp);

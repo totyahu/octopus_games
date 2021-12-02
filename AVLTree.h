@@ -33,7 +33,8 @@ namespace WET1 {
         T& getMax() const;
         int getSize() const;
         void toSortedArray(T dist_arr[]) const;
-        static AVLTree<T> *merge(const AVLTree<T> *tree1, const AVLTree<T> *tree2);
+        static AVLTree<T>* merge(const AVLTree<T> *tree1, const AVLTree<T> *tree2);
+//        static void query(condition, dest_arr);
         void print2D() const;
     };
 
