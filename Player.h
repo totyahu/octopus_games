@@ -3,6 +3,7 @@
 #define PLAYER_H
 #include "Group.h"
 
+using namespace std;
 namespace WET1{
 
     class Player
@@ -22,6 +23,7 @@ namespace WET1{
         int getIdPlayer();
         Group* getGroup();
         int getLevelPlayer();
+
     };
 }
 
