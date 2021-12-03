@@ -71,6 +71,7 @@ namespace WET1 {
         if(!this->size){
             return nullptr;
         }
+
         TreeNode<T> *res = this->root->find(data);
         if (res == nullptr) {
             return nullptr;

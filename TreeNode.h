@@ -49,7 +49,7 @@ namespace WET1 {
 
         bool isLeaf() const;
         T* getData() ;
-        TreeNode<T> *getParent() ;
+        TreeNode<T> *getParent();
         TreeNode<T> *find(const T &data);
         void insert(const T &data);
         TreeNode<T> *remove(const T &data);
@@ -83,6 +83,7 @@ namespace WET1 {
     template <class T>
     TreeNode<T>::TreeNode(const T& data):
             data(data),
+//            data(new T(data)),
             parent(nullptr),
             right(nullptr),
             left(nullptr),
@@ -390,7 +391,7 @@ namespace WET1 {
                 temp_parent->right = temp->left;
             }
             temp->left->parent = temp_parent;
-            TreeNode<T> * temp_left=temp->left;
+            TreeNode<T> * temp_left = temp->left;
             temp->gulag();
             return temp_left;
         }
@@ -401,7 +402,7 @@ namespace WET1 {
         if(who_am_i==RIGHT){
             temp_parent->right = temp->right;
         }
-        temp->right->parent= temp_parent;
+        temp->right->parent = temp_parent;
         TreeNode<T> * temp_right=temp->right;
 
         temp->gulag();
@@ -435,7 +436,7 @@ namespace WET1 {
 
     template <class T>
     T* TreeNode<T>::getMax(){
-        if(this== nullptr){
+        if(this == nullptr){
             return nullptr;
         }
         if(this->right == nullptr){

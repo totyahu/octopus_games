@@ -116,6 +116,7 @@ StatusType GameManager::GetHighestLevel(int GroupID, int *PlayerID) {
         return SUCCESS;
     }
 
+
     Group* group = findGroupById(GroupID);
     if(group== nullptr){
         return FAILURE;
@@ -125,7 +126,6 @@ StatusType GameManager::GetHighestLevel(int GroupID, int *PlayerID) {
         *PlayerID = -1;
         return SUCCESS;
     }
-
     *PlayerID = group->getHighestLevel();
     return SUCCESS;
 }
@@ -156,11 +156,11 @@ StatusType GameManager::GetAllPlayersByLevel(int GroupID, int **Players, int *nu
 
     if(GroupID < 0){
         *numOfPlayers = this->players_by_level->getSize();
-        *Players = new int[*numOfPlayers];
         PlayerByLevel* tmp = new PlayerByLevel[*numOfPlayers];
         this->players_by_level->toSortedArray(tmp); //TODO: add a temp array of players then put ids in players array
+        *Players = new int[*numOfPlayers];
         for(int i = 0; i < *numOfPlayers; i++){
-            *Players[i] = tmp[i].getIdPlayer();
+            (*Players)[i] = tmp[i].getIdPlayer();
         }
         return SUCCESS;
     }
@@ -183,27 +183,27 @@ StatusType GameManager::GetAllPlayersByLevel(int GroupID, int **Players, int *nu
 }
 
 
-bool isGroupEmpty(const Group& group){
-    return group.isEmpty();
+bool groupNotEmpty(const Group& group){
+    return !group.isEmpty();
 }
-//
-//StatusType GameManager::GetGroupsHighestLevel(int numOfGroups, int **Players){
-//    if(Players == nullptr || numOfGroups < 1){
-//        return INVALID_INPUT;
-//    }
-//
-//    PlayerByLevel *filteredPlayers = new PlayerByLevel[numOfGroups];
-//    if(!this->groups->query(filteredPlayers, isGroupEmpty, numOfGroups)){
-//        return FAILURE;
-//    }
-//
-//    *Players = new int[numOfGroups];
-//    for(int i = 0; i < numOfGroups; i++){
-//        *Players[i] = filteredPlayers[i].best_player->player_id;
-//    }
-//
-//    return SUCCESS;
-//}
+
+StatusType GameManager::GetGroupsHighestLevel(int numOfGroups, int **Players){
+    if(Players == nullptr || numOfGroups < 1){
+        return INVALID_INPUT;
+    }
+
+    Group *non_empty_groups = new Group[numOfGroups];
+    if(!this->groups->query(non_empty_groups, groupNotEmpty, numOfGroups)){
+        return FAILURE;
+    }
+
+    *Players = new int[numOfGroups];
+    for(int i = 0; i < numOfGroups; i++){
+        (*Players)[i] = non_empty_groups[i].getBestPlayerId();
+    }
+
+    return SUCCESS;
+}
 
 
 void GameManager::Quit(){
@@ -217,7 +217,6 @@ void GameManager::Quit(){
 Group* GameManager::findGroupById(int groupId){
     Group* tmp = new Group(groupId);
     Group* res = this->groups->find(*tmp);
-//    delete tmp;
     return res;
 }
 

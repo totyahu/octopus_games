@@ -1,8 +1,17 @@
 //
 // Created by keren on 30/11/2021.
 //
+
+#define DEFAULT_ID -1
+
 #include "Group.h"
 using namespace WET1;
+
+Group::Group():group_id(DEFAULT_ID){
+    this->group_players = nullptr;
+    this->best_player = nullptr;
+};
+
 Group::Group(int group_id):group_id(group_id){
     this->group_players=new AVLTree<PlayerByLevel>;
     this->best_player= nullptr;
@@ -73,6 +82,10 @@ int Group::getId() {
 
 int Group::getSize(){
     return this->group_players->getSize();
+}
+
+int Group::getBestPlayerId(){
+    return this->best_player ? this->best_player->getIdPlayer() : DEFAULT_ID;
 }
 
 void Group::printPlayers(){

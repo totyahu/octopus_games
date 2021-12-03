@@ -135,7 +135,7 @@
 //static errorType OnIncreaseLevel(void* DS, const char* const command);
 //static errorType OnGetHighestLevel(void* DS, const char* const command);
 //static errorType OnGetAllPlayersByLevel(void* DS, const char* const command);
-////static errorType OnGetGroupsHighestLevel(void* DS, const char* const command);
+//static errorType OnGetGroupsHighestLevel(void* DS, const char* const command);
 //static errorType OnQuit(void** DS, const char* const command);
 //
 ///***************************************************************************/
@@ -175,9 +175,9 @@
 //        case (GETALLPLAYERS_CMD):
 //            rtn_val = OnGetAllPlayersByLevel(DS, command_args);
 //            break;
-////        case (GETGROUPSHIGHEST_CMD):
-////            rtn_val = OnGetGroupsHighestLevel(DS, command_args);
-////            break;
+//        case (GETGROUPSHIGHEST_CMD):
+//            rtn_val = OnGetGroupsHighestLevel(DS, command_args);
+//            break;
 //        case (QUIT_CMD):
 //            rtn_val = OnQuit(&DS, command_args);
 //            break;
@@ -379,21 +379,21 @@
 //    free (playerIDs);
 //}
 //
-////static errorType OnGetGroupsHighestLevel(void* DS, const char* const command) {
-////    int numOfGroups;
-////    ValidateRead(sscanf(command, "%d", &numOfGroups), 1,
-////                 "GetGroupsHighestLevel failed.\n");
-////    int* playerIDs;
-////    StatusType res = GetGroupsHighestLevel(DS, numOfGroups, &playerIDs);
-////
-////    if (res != SUCCESS) {
-////        printf("GetGroupsHighestLevel: %s\n", ReturnValToStr(res));
-////        return error_free;
-////    }
-////
-////    PrintGroupsHighest(playerIDs, numOfGroups);
-////    return error_free;
-////}
+//static errorType OnGetGroupsHighestLevel(void* DS, const char* const command) {
+//    int numOfGroups;
+//    ValidateRead(sscanf(command, "%d", &numOfGroups), 1,
+//                 "GetGroupsHighestLevel failed.\n");
+//    int* playerIDs;
+//    StatusType res = GetGroupsHighestLevel(DS, numOfGroups, &playerIDs);
+//
+//    if (res != SUCCESS) {
+//        printf("GetGroupsHighestLevel: %s\n", ReturnValToStr(res));
+//        return error_free;
+//    }
+//
+//    PrintGroupsHighest(playerIDs, numOfGroups);
+//    return error_free;
+//}
 //
 ///***************************************************************************/
 ///* OnQuit                                                                  */
@@ -415,33 +415,46 @@
 //}
 //#endif
 
-#include "GameManager.h"
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "library1.h"
+//#include "library1.h"
 #include <iostream>
+#include "GameManager.h"
 using namespace std;
 using namespace WET1;
 
-int main()
-{
-    GameManager * game= new GameManager();
-    game->AddGroup(1);
-    game->AddPlayer(1,1,1);
-    game->AddGroup(3);
-    game->AddPlayer(2,3,4);
-    game->IncreaseLevel(1,5);
-    game->AddPlayer(3,1,4);
-    game->AddGroup(2);
-    game->AddPlayer(45,2,2);
-    game->RemovePlayer(1);
 
+int main(){
+    GameManager* g = new GameManager();
+    g->AddGroup(1);
+    g->AddPlayer(1, 1, 5);
+    g->AddGroup(2);
+    g->AddPlayer(2, 2, 4);
 
+    int* best_Players;
+    g->GetGroupsHighestLevel(2, &best_Players);
 
+    cout << best_Players[0] << ", " << best_Players[1] << endl;
 
+    g->ReplaceGroup(1, 2);
 
+    g->IncreaseLevel(1, 5);
+
+    int x = 0;
+    g->GetHighestLevel(2, &x);
+
+    g->RemovePlayer(2);
+
+    int* all_players;
+    int num_of_players;
+    g->GetAllPlayersByLevel(-1, &all_players, &num_of_players);
+
+    cout << all_players[0] << ", " << all_players[1] << endl;
+
+    g->Quit();
 
     return 0;
 }

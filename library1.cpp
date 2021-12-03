@@ -36,11 +36,10 @@ StatusType GetAllPlayersByLevel(void *DS, int GroupID, int **Players, int *numOf
     return ((GameManager*) DS)->GetAllPlayersByLevel(GroupID, Players, numOfPlayers);
 }
 
-//StatusType GetGroupsHighestLevel(void *DS, int numOfGroups, int **Players){
-//    return ((GameManager*) DS)->GetGroupsHighestLevel(numOfGroups, Players);
-//}
+StatusType GetGroupsHighestLevel(void *DS, int numOfGroups, int **Players){
+    return ((GameManager*) DS)->GetGroupsHighestLevel(numOfGroups, Players);
+}
 
 void Quit(void** DS){
     return ((GameManager*) DS)->Quit();
 }
-

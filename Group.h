@@ -19,6 +19,7 @@ namespace WET1{
         AVLTree<PlayerByLevel>* group_players;
 
     public:
+        Group();
         explicit Group(int group_id);
         ~Group()=default;
         bool operator==(const Group& other_group);
@@ -31,6 +32,7 @@ namespace WET1{
         bool isEmpty() const;
         int getId();
         int getSize();
+        int getBestPlayerId();
         bool mergeGroup(Group* other_group);
         void printPlayers();
 
