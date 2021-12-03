@@ -441,12 +441,12 @@ int main(){
 
     g->ReplaceGroup(1, 2);
 
-//    g->IncreaseLevel(1, 5);
+    g->IncreaseLevel(1, 5);
 
     int x = 0;
     g->GetHighestLevel(2, &x);
 
-//    g->RemovePlayer(2);
+    g->RemovePlayer(2);
 
     int* all_players;
     int num_of_players;

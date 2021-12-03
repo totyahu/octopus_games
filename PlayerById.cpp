@@ -46,13 +46,13 @@ namespace WET1
 {
     ostream& operator<<(std::ostream& os,const PlayerById& player)
     {
-            if(player.player_group!= nullptr)
-            {
-                return os <<"PlayerById"<<endl
-                          << "Player id: "<< player.player_id <<endl
-                          <<"Player level "<<player.player_level<<endl
-                          <<"Player group id: "<< player.player_group->getId() <<endl;
-            }
+        if(player.player_group!= nullptr)
+        {
+            return os <<"PlayerById"<<endl
+                      << "Player id: "<< player.player_id <<endl
+                      <<"Player level "<<player.player_level<<endl
+                      <<"Player group id: "<< player.player_group->getId() <<endl;
+        }
         return os <<"PlayerById"<<endl
                   << "Player id: "<< player.player_id <<endl
                   <<"Player level "<<player.player_level<<endl

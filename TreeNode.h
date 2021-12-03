@@ -48,7 +48,7 @@ namespace WET1 {
         ~TreeNode();
 
         bool isLeaf() const;
-        T& getData();
+        T* getData() ;
         TreeNode<T> *getParent();
         TreeNode<T> *find(const T &data);
         void insert(const T &data);
@@ -113,8 +113,8 @@ namespace WET1 {
     }
 
     template <class T>
-    T& TreeNode<T>::getData(){
-        return this->data;
+    T* TreeNode<T>::getData() {
+        return &(this->data);
     }
 
     template <class T>
@@ -262,17 +262,28 @@ namespace WET1 {
         }
 
         if(!(this->data < data)){
-            return this->left->find(data);
+            if(this->left == nullptr){
+                return nullptr;
+            }
+            else{
+                return this->left->find(data);
+            }
         }
 
-        return this->right->find(data);
+        if(this->right == nullptr){
+            return nullptr;
+        }
+        else{
+            return this->right->find(data);
+        }
     }
 
     template <class T>
     void TreeNode<T>::insert(const T& data){
         if(!(this->data < data)){
             if(this->left == nullptr){
-                TreeNode<T>* new_tree = new TreeNode<T>(data);
+                T * new_data= new T(data);
+                TreeNode<T>* new_tree = new TreeNode<T>(*new_data);
                 this->left = new_tree;
                 new_tree->parent = this;
                 this->fix();
@@ -283,7 +294,8 @@ namespace WET1 {
         }
         else {
             if(this->right == nullptr){
-                TreeNode<T>* new_tree = new TreeNode<T>(data);
+                T * new_data= new T(data);
+                TreeNode<T>* new_tree = new TreeNode<T>(*new_data);
                 this->right = new_tree;
                 new_tree->parent = this;
                 this->fix();
@@ -379,10 +391,9 @@ namespace WET1 {
                 temp_parent->right = temp->left;
             }
             temp->left->parent = temp_parent;
-
+            TreeNode<T> * temp_left = temp->left;
             temp->gulag();
-            delete temp;
-            return temp_parent;
+            return temp_left;
         }
 
         if(who_am_i == LEFT){
@@ -391,11 +402,11 @@ namespace WET1 {
         if(who_am_i==RIGHT){
             temp_parent->right = temp->right;
         }
-        temp->right->parent= temp_parent;
+        temp->right->parent = temp_parent;
+        TreeNode<T> * temp_right=temp->right;
 
         temp->gulag();
-        delete temp;
-        return temp_parent;
+        return temp_right;
     }
 
     template <class T>
@@ -406,6 +417,9 @@ namespace WET1 {
 
     template <class T>
     TreeNode<T>* TreeNode<T>::fix(bool stop_at_root){
+        if(this== nullptr){
+            return nullptr;
+        }
         if(abs(this->BF()) == 2){
             this->roll();
         }
@@ -422,6 +436,9 @@ namespace WET1 {
 
     template <class T>
     T* TreeNode<T>::getMax(){
+        if(this == nullptr){
+            return nullptr;
+        }
         if(this->right == nullptr){
             return new T(this->data);
         }

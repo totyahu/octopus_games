@@ -37,24 +37,22 @@ void Group::addPlayer(const PlayerByLevel& player){
         }
     }
     else{
-        this->best_player = new PlayerByLevel(player);
+        this->best_player = new PlayerByLevel(player);//TODO:Check
     }
 }
 
 void Group::removePlayer(const PlayerByLevel& player){
     this->group_players->remove(player);
+
     this->best_player = this->group_players->getMax();
 }
 
-//bool Group::margeGroups(Group& other_group){
-//
-//}
 
 void Group::increaseLevel(PlayerByLevel& player,int increase_level){
-    PlayerByLevel * temp=this->group_players->find(player);
     this->removePlayer(player);
-    temp->increaseLevel(increase_level);
-    this->addPlayer(*temp);
+    PlayerByLevel * tmp = new PlayerByLevel(player);
+    tmp->increaseLevel(increase_level);
+    this->addPlayer(*tmp);
 }
 
 int Group::getHighestLevel(){

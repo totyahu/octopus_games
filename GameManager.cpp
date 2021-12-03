@@ -61,15 +61,12 @@ StatusType GameManager::RemovePlayer(int PlayerID){
         return INVALID_INPUT;
     }
 
-    PlayerById* temp = new PlayerById(PlayerID, 0, nullptr);
-    if(!this->players_by_id->exists(*temp)){
+    PlayerById* player_by_id = findPlayerById(PlayerID);
+    if(players_by_id== nullptr){
         return FAILURE;
     }
 
-    PlayerById* player_by_id = this->players_by_id->find(*temp);
-    PlayerByLevel* player_by_level = new PlayerByLevel(player_by_id->getIdPlayer(),
-                                                       player_by_id->getLevelPlayer(),
-                                                       player_by_id->getGroup());
+    PlayerByLevel* player_by_level = findPlayerByLevel(player_by_id);
     player_by_id->getGroup()->removePlayer(*player_by_level);
     this->players_by_id->remove(*player_by_id);
     this->players_by_level->remove(*player_by_level);
@@ -81,14 +78,11 @@ StatusType GameManager::IncreaseLevel(int PlayerID, int LevelIncrease){//TODO: d
     if(PlayerID <= 0 || LevelIncrease <= 0){
         return INVALID_INPUT;
     }
-    PlayerById* temp = new PlayerById(PlayerID,0, nullptr);
-    if(!this->players_by_id->exists(*temp)){
+    PlayerById* player_by_id =findPlayerById(PlayerID);
+    if(player_by_id== nullptr){
         return FAILURE;
     }
-    PlayerById * player_by_id = this->players_by_id->find(*temp);
-    PlayerByLevel * player_by_level = new PlayerByLevel(player_by_id->getIdPlayer(),
-                                                        player_by_id->getLevelPlayer(),
-                                                        player_by_id->getGroup());
+    PlayerByLevel * player_by_level = findPlayerByLevel(player_by_id);
     player_by_id->getGroup()->increaseLevel(*player_by_level,LevelIncrease);
     this->players_by_level->remove(*player_by_level);
     player_by_level->increaseLevel(LevelIncrease);
@@ -122,12 +116,12 @@ StatusType GameManager::GetHighestLevel(int GroupID, int *PlayerID) {
         return SUCCESS;
     }
 
-    Group* temp = new Group(GroupID);
-    if(!this->groups->exists(*temp)){
+
+    Group* group = findGroupById(GroupID);
+    if(group== nullptr){
         return FAILURE;
     }
 
-    Group* group = this->groups->find(*temp);
     if(group->isEmpty()){
         *PlayerID = -1;
         return SUCCESS;
@@ -171,7 +165,7 @@ StatusType GameManager::GetAllPlayersByLevel(int GroupID, int **Players, int *nu
         return SUCCESS;
     }
 
-    Group* group = this->findGroupById(GroupID);
+    Group* group = findGroupById(GroupID);
     if(group == nullptr){
         return FAILURE;
     }
@@ -223,7 +217,6 @@ void GameManager::Quit(){
 Group* GameManager::findGroupById(int groupId){
     Group* tmp = new Group(groupId);
     Group* res = this->groups->find(*tmp);
-//    delete tmp;
     return res;
 }
 

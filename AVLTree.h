@@ -67,8 +67,8 @@ namespace WET1 {
 
 
     template<class T>
-    T* AVLTree<T>::find(const T &data) const {
-        if(this->size == 0){
+    T *AVLTree<T>::find(const T &data) const {
+        if(!this->size){
             return nullptr;
         }
 
@@ -76,7 +76,7 @@ namespace WET1 {
         if (res == nullptr) {
             return nullptr;
         }
-        return &(this->root->find(data)->getData());
+        return this->root->find(data)->getData();
     }
 
     template<class T>
@@ -120,10 +120,9 @@ namespace WET1 {
 
     template<class T>
     T* AVLTree<T>::getMax() const{
-        if(this->size == 0){
+        if(!size){
             return nullptr;
         }
-
         return this->root->getMax();
     }
 
