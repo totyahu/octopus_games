@@ -28,30 +28,28 @@ void Group::addPlayer(const PlayerByLevel& player){
         }
     }
     else{
-        this->best_player = new PlayerByLevel(player);
+        this->best_player = new PlayerByLevel(player);//TODO:Check
     }
 }
 
 void Group::removePlayer(const PlayerByLevel& player){
     this->group_players->remove(player);
+
     this->best_player = this->group_players->getMax();
 }
 
-//bool Group::margeGroups(Group& other_group){
-//
-//}
 
 void Group::increaseLevel(PlayerByLevel& player,int increase_level){
-    PlayerByLevel * temp=this->group_players->find(player);
     this->removePlayer(player);
-    temp->increaseLevel(increase_level);
-    this->addPlayer(*temp);
+    PlayerByLevel * tmp = new PlayerByLevel(player);
+    tmp->increaseLevel(increase_level);
+    this->addPlayer(*tmp);
 }
 
 int Group::getHighestLevel(){
     return this->best_player->getIdPlayer();
 }
-bool Group::isEmpty(){
+bool Group::isEmpty() const{
     return (this->best_player== nullptr);
 }
 
@@ -64,12 +62,17 @@ bool Group::mergeGroup(Group* other_group){
     AVLTree<PlayerByLevel>* tmp1 = this->group_players;
     AVLTree<PlayerByLevel>* tmp2 = other_group->group_players;
     this->group_players = merged_tree;
+    this->best_player = Utils::max(this->best_player, other_group->best_player);
 
     return true;
 }
 
 int Group::getId() {
     return this->group_id;
+}
+
+int Group::getSize(){
+    return this->group_players->getSize();
 }
 
 void Group::printPlayers(){
@@ -80,5 +83,9 @@ void Group::printPlayers(){
         cout<<"no players"<<endl;
     }
     this->group_players->print2D();
+}
+
+void Group::toSortedArray(PlayerByLevel* dest_arr){
+    this->group_players->toSortedArray(dest_arr);
 }
 

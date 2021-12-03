@@ -28,10 +28,13 @@ namespace WET1{
         void removePlayer(const PlayerByLevel& player);//TODO:find max player after remove
         void increaseLevel(PlayerByLevel& player,int increase_level);
         int getHighestLevel();
-        bool isEmpty();
+        bool isEmpty() const;
         int getId();
+        int getSize();
         bool mergeGroup(Group* other_group);
         void printPlayers();
+
+        void toSortedArray(PlayerByLevel* dest_arr);
     };
 }
 #endif //OCTOPUS_GAMES_GROUP_H

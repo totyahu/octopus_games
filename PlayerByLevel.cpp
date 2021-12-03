@@ -6,15 +6,15 @@
 using namespace WET1;
 
 PlayerByLevel::PlayerByLevel(int player_id, int player_level, Group* player_group):
-player_id(player_id),player_level(player_level){
+        player_id(player_id),player_level(player_level){
     this->player_group = player_group;
 }
 
 bool PlayerByLevel::operator<(const PlayerByLevel& other_player) const {
     if(this->player_level == other_player.player_level){
-     return this->player_id > other_player.player_id;
+        return this->player_id > other_player.player_id;
     }
-      return this->player_level < other_player.player_level;
+    return this->player_level < other_player.player_level;
 }
 
 PlayerByLevel& PlayerByLevel::operator=(const PlayerByLevel& player){
@@ -52,10 +52,10 @@ namespace WET1
         if(player.player_group!= nullptr)
         {
             return os <<"Pl, "<< "i: "<< player.player_id
-            <<",l: "<<player.player_level<<",g_i: "<< player.player_group->getId() <<endl;
+                      <<",l: "<<player.player_level<<",g_i: "<< player.player_group->getId() <<endl;
         }
         return os <<"Pl,"<< "i: "<< player.player_id
-        <<",l: "<<player.player_level<<", No group "<<endl;
+                  <<",l: "<<player.player_level<<", No group "<<endl;
 
     }
 

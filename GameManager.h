@@ -8,14 +8,16 @@
 #include "PlayerById.h"
 #include "PlayerByLevel.h"
 #include "AVLTree.h"
+#include "library1.h"
+
 
 namespace WET1{
-    typedef enum {
-        SUCCESS = 0,
-        FAILURE = -1,
-        ALLOCATION_ERROR = -2,
-        INVALID_INPUT = -3
-    } StatusType;
+//    typedef enum {
+//        SUCCESS = 0,
+//        FAILURE = -1,
+//        ALLOCATION_ERROR = -2,
+//        INVALID_INPUT = -3
+//    } StatusType;
 
     class GameManager{
         AVLTree<Group> * groups;
@@ -36,6 +38,8 @@ namespace WET1{
         StatusType GetGroupsHighestLevel(int numOfGroups, int **Players);
         void Quit();
         Group* findGroupById(int groupId);
+        PlayerById* findPlayerById(int playerId);
+        PlayerByLevel* findPlayerByLevel(PlayerById* player);
         void printGame();
     };
 }
