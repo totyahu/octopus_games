@@ -67,16 +67,23 @@ namespace WET1 {
 
 
     template<class T>
-    T *AVLTree<T>::find(const T &data) const {
+    T* AVLTree<T>::find(const T &data) const {
+        if(this->size == 0){
+            return nullptr;
+        }
+
         TreeNode<T> *res = this->root->find(data);
         if (res == nullptr) {
             return nullptr;
         }
-        return this->root->find(data)->getData();
+        return &(this->root->find(data)->getData());
     }
 
     template<class T>
     bool AVLTree<T>::exists(const T &data) const {
+        if(this->root == nullptr){
+            return false;
+        }
         return this->root->find(data) != nullptr;
     }
 
@@ -113,6 +120,10 @@ namespace WET1 {
 
     template<class T>
     T* AVLTree<T>::getMax() const{
+        if(this->size == 0){
+            return nullptr;
+        }
+
         return this->root->getMax();
     }
 

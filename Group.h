@@ -19,6 +19,7 @@ namespace WET1{
         AVLTree<PlayerByLevel>* group_players;
 
     public:
+        Group();
         explicit Group(int group_id);
         ~Group()=default;
         bool operator==(const Group& other_group);
@@ -28,10 +29,14 @@ namespace WET1{
         void removePlayer(const PlayerByLevel& player);//TODO:find max player after remove
         void increaseLevel(PlayerByLevel& player,int increase_level);
         int getHighestLevel();
-        bool isEmpty();
+        bool isEmpty() const;
         int getId();
+        int getSize();
+        int getBestPlayerId();
         bool mergeGroup(Group* other_group);
         void printPlayers();
+
+        void toSortedArray(PlayerByLevel* dest_arr);
     };
 }
 #endif //OCTOPUS_GAMES_GROUP_H

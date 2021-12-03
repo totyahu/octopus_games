@@ -1,8 +1,17 @@
 //
 // Created by keren on 30/11/2021.
 //
+
+#define DEFAULT_ID -1
+
 #include "Group.h"
 using namespace WET1;
+
+Group::Group():group_id(DEFAULT_ID){
+    this->group_players = nullptr;
+    this->best_player = nullptr;
+};
+
 Group::Group(int group_id):group_id(group_id){
     this->group_players=new AVLTree<PlayerByLevel>;
     this->best_player= nullptr;
@@ -51,7 +60,7 @@ void Group::increaseLevel(PlayerByLevel& player,int increase_level){
 int Group::getHighestLevel(){
     return this->best_player->getIdPlayer();
 }
-bool Group::isEmpty(){
+bool Group::isEmpty() const{
     return (this->best_player== nullptr);
 }
 
@@ -64,12 +73,21 @@ bool Group::mergeGroup(Group* other_group){
     AVLTree<PlayerByLevel>* tmp1 = this->group_players;
     AVLTree<PlayerByLevel>* tmp2 = other_group->group_players;
     this->group_players = merged_tree;
+    this->best_player = Utils::max(this->best_player, other_group->best_player);
 
     return true;
 }
 
 int Group::getId() {
     return this->group_id;
+}
+
+int Group::getSize(){
+    return this->group_players->getSize();
+}
+
+int Group::getBestPlayerId(){
+    return this->best_player ? this->best_player->getIdPlayer() : DEFAULT_ID;
 }
 
 void Group::printPlayers(){
@@ -80,5 +98,9 @@ void Group::printPlayers(){
         cout<<"no players"<<endl;
     }
     this->group_players->print2D();
+}
+
+void Group::toSortedArray(PlayerByLevel* dest_arr){
+    this->group_players->toSortedArray(dest_arr);
 }
 

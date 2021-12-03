@@ -48,13 +48,13 @@ namespace WET1 {
         ~TreeNode();
 
         bool isLeaf() const;
-        T* getData() const;
-        TreeNode<T> *getParent() const;
+        T& getData();
+        TreeNode<T> *getParent();
         TreeNode<T> *find(const T &data);
         void insert(const T &data);
         TreeNode<T> *remove(const T &data);
         TreeNode<T> *removeNode(const T &data);
-        T* getMax() const;
+        T* getMax();
         void toSortedArray(T dist_arr[]) const;
         static TreeNode<T> *arrayToTree(const T *sortedArr, int size);
         static TreeNode<T> *merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2);
@@ -83,6 +83,7 @@ namespace WET1 {
     template <class T>
     TreeNode<T>::TreeNode(const T& data):
             data(data),
+//            data(new T(data)),
             parent(nullptr),
             right(nullptr),
             left(nullptr),
@@ -107,13 +108,13 @@ namespace WET1 {
     }
 
     template <class T>
-    TreeNode<T>* TreeNode<T>::getParent() const{
+    TreeNode<T>* TreeNode<T>::getParent(){
         return this->parent;
     }
 
     template <class T>
-    T* TreeNode<T>::getData() const{
-        return new T(this->data);
+    T& TreeNode<T>::getData(){
+        return this->data;
     }
 
     template <class T>
@@ -420,11 +421,11 @@ namespace WET1 {
 
 
     template <class T>
-    T* TreeNode<T>::getMax() const{
+    T* TreeNode<T>::getMax(){
         if(this->right == nullptr){
             return new T(this->data);
         }
-        return this-right->getMax();
+        return this->right->getMax();
     }
 
     template <class T>
