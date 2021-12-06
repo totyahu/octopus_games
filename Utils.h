@@ -12,27 +12,46 @@ namespace WET1 {
     class Utils {
     public:
 
-        template<class T>
-        static T* mergeArrays(T arr1[], T arr2[], int size1, int size2){
-            T* arr_merge = new T[size1 + size2];
+//        template<class T>
+//        static T* mergeArrays(const T* arr1, const T* arr2, int size1, int size2){
+//            T* arr_merge = new T[size1 + size2];
+//
+//            int idx1 = 0, idx2 = 0, idx3 = 0;
+//            while(idx1 < size1 && idx2 < size2){
+//                if(arr1[idx1] < arr2[idx2]){
+//                    arr_merge[idx3++] = arr1[idx1++];
+//                }
+//                else {
+//                    arr_merge[idx3++] = arr2[idx2++];
+//                }
+//            }
+//            while(idx1 < size1){
+//                arr_merge[idx3++] = arr1[idx1++];
+//            }
+//            while(idx2 < size2){
+//                arr_merge[idx3++] = arr2[idx2++];
+//            }
+//
+//            return arr_merge;
+//        }
 
+        template<class T>
+        static void mergeArrays(T* dest_arr, T* arr1, T* arr2, int size1, int size2){
             int idx1 = 0, idx2 = 0, idx3 = 0;
             while(idx1 < size1 && idx2 < size2){
                 if(arr1[idx1] < arr2[idx2]){
-                    arr_merge[idx3++] = arr1[idx1++];
+                    dest_arr[idx3++] = arr1[idx1++];
                 }
                 else {
-                    arr_merge[idx3++] = arr2[idx2++];
+                    dest_arr[idx3++] = arr2[idx2++];
                 }
             }
             while(idx1 < size1){
-                arr_merge[idx3++] = arr1[idx1++];
+                dest_arr[idx3++] = arr1[idx1++];
             }
             while(idx2 < size2){
-                arr_merge[idx3++] = arr2[idx2++];
+                dest_arr[idx3++] = arr2[idx2++];
             }
-
-            return arr_merge;
         }
 
     };

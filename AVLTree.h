@@ -33,7 +33,7 @@ namespace WET1 {
         void remove(const T &data);
         T* getMax() const;
         int getSize() const;
-        void toSortedArray(T dist_arr[]) const;
+        void toSortedArray(T* dist_arr) const;
         static AVLTree<T>* merge(const AVLTree<T> *tree1, const AVLTree<T> *tree2);
         void print2D() const;
 
@@ -120,7 +120,7 @@ namespace WET1 {
     }
 
     template<class T>
-    void AVLTree<T>::toSortedArray(T dist_arr[]) const{
+    void AVLTree<T>::toSortedArray(T* dist_arr) const{
         this->root->toSortedArray(dist_arr);
     }
 

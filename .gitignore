@@ -36,3 +36,12 @@
 
 # build
 cmake-build-debug
+CMakeFiles
+
+*.vcxproj*
+*.cmake
+CMakeCache.txt
+*.sln
+x64
+*.dir
+Debug

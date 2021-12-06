@@ -1197,4 +1197,3 @@ GetAllPlayersByLevel 68
 GetAllPlayersByLevel 82
 AddPlayer 1945 103 3
 GetAllPlayersByLevel -1
-Quit

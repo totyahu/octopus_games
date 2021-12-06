@@ -37,7 +37,7 @@ namespace WET1 {
         void roll();
         TreeNode<T> *fix(bool stop_at_root = false);
         void gulag();
-        void toSortedArrayAux(T dist_arr[], int *idx) const;
+        void toSortedArrayAux(T* dist_arr, int *idx) const;
         static TreeNode<T> *arrayToTreeAux(const T *sortedArr, int startIdx, int size, TreeNode<T> *parent);
         void print2DUtil(int space) const;
 
@@ -56,7 +56,7 @@ namespace WET1 {
         TreeNode<T> *remove(const T &data);
         TreeNode<T> *removeNode(const T &data);
         T* getMax();
-        void toSortedArray(T dist_arr[]) const;
+        void toSortedArray(T* dist_arr) const;
         static TreeNode<T> *arrayToTree(const T *sortedArr, int size);
         static TreeNode<T> *merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2);
         void print2D() const;
@@ -458,13 +458,13 @@ namespace WET1 {
     }
 
     template <class T>
-    void TreeNode<T>::toSortedArray(T dist_arr[]) const{
+    void TreeNode<T>::toSortedArray(T* dist_arr) const{
         int idx = 0;
         return this->toSortedArrayAux(dist_arr, &idx);
     }
 
     template <class T>
-    void TreeNode<T>::toSortedArrayAux(T dist_arr[], int* idx) const{
+    void TreeNode<T>::toSortedArrayAux(T* dist_arr, int* idx) const{
         if(this->left != nullptr){
             this->left->toSortedArrayAux(dist_arr, idx);
         }
@@ -478,13 +478,15 @@ namespace WET1 {
 
     template <class T>
     TreeNode<T>* TreeNode<T>::merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2){
-        T arr1[size1];
-        T arr2[size2];
+        T* arr1 = new T[size1];
+        T* arr2 = new T[size2];
 
         tree1->toSortedArray(arr1);
         tree2->toSortedArray(arr2);
 
-        T* arr_merge = Utils::mergeArrays(arr1, arr2, size1, size2);
+
+        T* arr_merge = new T[size1 + size2];
+        Utils::mergeArrays(arr_merge, arr1, arr2, size1, size2);
 
         return TreeNode<T>::arrayToTree(arr_merge, size1 + size2);
     }
