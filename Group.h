@@ -1,33 +1,42 @@
-//
-// Created by keren on 29/11/2021.
-//
 #ifndef GROUP_H
 #define GROUP_H
-#include "PlayerByLevel.h"
-#include "AVLTree.h"
+
+//#pragma once
+
 #include <string>
 #include <iostream>
 #include <cstdio>
+#include "AVLTree.h"
+
+//#include "Group.fwd.h"
+//#include "PlayerInGroup.fwd.h"
+
+#include "common_fwd.h"
+
 
 using namespace std;
+
 namespace WET1{
-    class PlayerByLevel;
+
+
+
     class Group
     {
         int group_id;
-        PlayerByLevel * best_player;
-        AVLTree<PlayerByLevel>* group_players;
+        PlayerInGroup * best_player;
+        AVLTree<PlayerInGroup>* group_players;
+
 
     public:
         Group();
         explicit Group(int group_id);
-        ~Group()=default;
+        ~Group();
         bool operator==(const Group& other_group);
         bool operator<(const Group& other_group);
-        bool playerExist(const PlayerByLevel& player);
-        void addPlayer(const PlayerByLevel& player);
-        void removePlayer(const PlayerByLevel& player);//TODO:find max player after remove
-        void increaseLevel(PlayerByLevel& player,int increase_level);
+        bool playerExist(const PlayerInGroup& player);
+        void addPlayer(const PlayerInGroup& player);
+        void removePlayer(const PlayerInGroup& player);//TODO:find max player after remove
+        void increaseLevel(PlayerInGroup& player,int increase_level);
         int getHighestLevel();
         bool isEmpty() const;
         int getId();
@@ -36,7 +45,7 @@ namespace WET1{
         bool mergeGroup(Group* other_group);
         void printPlayers();
 
-        void toSortedArray(PlayerByLevel* dest_arr);
+        void toSortedArray(PlayerInGroup* dest_arr);
     };
 }
 #endif //OCTOPUS_GAMES_GROUP_H

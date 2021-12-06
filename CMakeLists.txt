@@ -4,6 +4,14 @@ project(octopus_games)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(octopus_games main1.cpp AVLTree.h TreeNode.h Utils.h
-        PlayerById.cpp PlayerById.h PlayerByLevel.cpp PlayerByLevel.h
-        Group.cpp Group.h GameManager.cpp GameManager.h library1.h library1.cpp)
+add_executable(
+        octopus_games
+        main1.cpp
+        library1.cpp
+        GameManager.cpp
+        PlayerInGroup.cpp
+        PlayerById.cpp
+        PlayerByLevel.cpp
+        Group.cpp
+        common_fwd.h
+)

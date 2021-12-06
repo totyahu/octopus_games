@@ -9,6 +9,7 @@
 #define LEFT 1
 #define ROOT 0
 #define RIGHT -1
+#define NULL_HEIGHT -1
 
 
 using namespace std;
@@ -78,6 +79,20 @@ namespace WET1 {
                 return this->right->query(pred, dest_arr, size, found);
             }
         }
+
+        template<typename P>
+        void apply(P pred, void* arg){
+            pred(&(this->data), arg);
+
+            if(this->left != nullptr){
+                this->left->apply(pred, arg);
+            }
+
+            if(this->right != nullptr){
+                this->right->apply(pred, arg);
+            }
+        }
+
     };
 
     template <class T>
@@ -92,6 +107,10 @@ namespace WET1 {
 
     template <class T>
     TreeNode<T>::~TreeNode(){
+        if(this == nullptr){
+            return;
+        }
+
         if(this->left != nullptr){
             delete this->left;
         }
@@ -104,6 +123,7 @@ namespace WET1 {
 //        cout << this->data << endl;
 
         T* tmp = &(this->data);
+        this->gulag();
         delete tmp;
     }
 
@@ -124,12 +144,12 @@ namespace WET1 {
 
     template <class T>
     int TreeNode<T>::leftHeight() const{
-        return this->left == nullptr ? -1 : this->left->height;
+        return this->left == nullptr ? NULL_HEIGHT : this->left->height;
     }
 
     template <class T>
     int TreeNode<T>::rightHeight() const{
-        return this->right == nullptr ? -1 : this->right->height;
+        return this->right == nullptr ? NULL_HEIGHT : this->right->height;
     }
 
     template <class T>
@@ -248,7 +268,7 @@ namespace WET1 {
 
     template <class T>
     void TreeNode<T>::updateHeight(){
-        this->height = 1 + Utils::max(this->leftHeight(), this->rightHeight());
+        this->height = 1 + MAX(this->leftHeight(), this->rightHeight());
     }
 
     template <class T>
