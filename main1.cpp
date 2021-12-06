@@ -416,13 +416,11 @@
 //#endif
 
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-//#include "library1.h"
+
 #include <iostream>
 #include "GameManager.h"
+
+
 using namespace std;
 using namespace WET1;
 
@@ -434,10 +432,6 @@ int main(){
     g->AddGroup(2);
     g->AddPlayer(2, 2, 4);
 
-    int* best_Players;
-    g->GetGroupsHighestLevel(2, &best_Players);
-
-    cout << best_Players[0] << ", " << best_Players[1] << endl;
 
     g->ReplaceGroup(1, 2);
 
@@ -447,6 +441,11 @@ int main(){
     g->GetHighestLevel(2, &x);
 
     g->RemovePlayer(2);
+
+    int* best_Players;
+    g->GetGroupsHighestLevel(2, &best_Players);
+
+    cout << best_Players[0] << ", " << best_Players[1] << endl;
 
     int* all_players;
     int num_of_players;

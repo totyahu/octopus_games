@@ -4,20 +4,16 @@
 
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
-#include "Group.h"
-#include "PlayerById.h"
-#include "PlayerByLevel.h"
-#include "AVLTree.h"
+
 #include "library1.h"
+#include "AVLTree.h"
+
+#include "common_fwd.h"
 
 
 namespace WET1{
-//    typedef enum {
-//        SUCCESS = 0,
-//        FAILURE = -1,
-//        ALLOCATION_ERROR = -2,
-//        INVALID_INPUT = -3
-//    } StatusType;
+
+
 
     class GameManager{
         AVLTree<Group> * groups;

@@ -1,14 +1,23 @@
 
 #ifndef PLAYERBYID_H
 #define PLAYERBYID_H
-#include "Group.h"
+
+//#pragma once
+
 #include <string>
 #include <iostream>
-#include <cstdio>
+
+//#include "PlayerById.fwd.h"
+//#include "Group.fwd.h"
+
+#include "common_fwd.h"
 
 using namespace std;
+
 namespace WET1{
-    class Group;
+
+
+
     class PlayerById{
         int player_id;
         int player_level;
@@ -25,6 +34,7 @@ namespace WET1{
         int getIdPlayer();
         Group* getGroup();
         int getLevelPlayer();
+        void changeGroup(Group* new_group);
         friend std::ostream& operator<<(std::ostream& os,const PlayerById& player);
     };
 }

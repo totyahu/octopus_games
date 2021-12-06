@@ -1,11 +1,12 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
+
 #include <string>
 #include <iostream>
 #include <cstdio>
 #include <stdexcept>
-#include "./TreeNode.h"
-#include "./Utils.h"
+#include "TreeNode.h"
+#include "Utils.h"
 
 #define LEFT 1
 #define ROOT 0
@@ -42,6 +43,13 @@ namespace WET1 {
             this->root->query(pred, dest_arr, find_size, &found);
             return found == find_size;
         }
+
+        template<typename P>
+        void apply(P pred, void* arg){
+            if(this->root != nullptr){
+                this->root->apply(pred, arg);
+            }
+        }
     };
 
 //    AVLTree implementation
@@ -62,7 +70,9 @@ namespace WET1 {
 
     template<class T>
     AVLTree<T>::~AVLTree(){
-        delete this->root;
+        if(this->root && this->size){
+            delete this->root;
+        }
     }
 
 
