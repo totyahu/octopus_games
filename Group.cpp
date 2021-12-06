@@ -13,12 +13,13 @@ namespace WET1{
 
     Group::Group(int group_id):group_id(group_id){
         this->group_players = new AVLTree<PlayerInGroup>;
-        this->best_player= nullptr;
+        this->best_player = nullptr;
     }
 
     Group::~Group(){
         if(this->group_players){
             delete this->group_players;
+            this->group_players = nullptr;
         }
     }
 
@@ -53,12 +54,12 @@ namespace WET1{
     }
 
 
-    void Group::increaseLevel(PlayerInGroup& player,int increase_level){
-        this->removePlayer(player);
-        PlayerInGroup * tmp = new PlayerInGroup(player);
-        tmp->increaseLevel(increase_level);
-        this->addPlayer(*tmp);
-    }
+//    void Group::increaseLevel(PlayerInGroup& player, int increase_level){
+//        this->removePlayer(player);
+//        PlayerInGroup * tmp = new PlayerInGroup(player);
+//        tmp->increaseLevel(increase_level);
+//        this->addPlayer(*tmp);
+//    }
 
     int Group::getHighestLevel(){
         return this->best_player->getIdPlayer();
@@ -67,12 +68,12 @@ namespace WET1{
         return (this->best_player== nullptr);
     }
 
-
     void updateGroup(PlayerInGroup* player, void* new_group){
         if(!(player->getGroup() == (Group*)new_group)){
             player->changeGroup((Group*)new_group);
         }
     }
+
 
     bool Group::mergeGroup(Group* other_group){
         AVLTree<PlayerInGroup>* merged_tree = AVLTree<PlayerInGroup>::merge(this->group_players, other_group->group_players);
@@ -91,7 +92,6 @@ namespace WET1{
             this->best_player = other_group->best_player;
             this->best_player->changeGroup(this);
         }
-
 
         return true;
     }

@@ -28,6 +28,7 @@ namespace WET1{
                       PlayerById* by_id_instance,
                       PlayerByLevel* by_level_instance) noexcept;
         explicit PlayerInGroup(const PlayerByLevel& player);
+        PlayerInGroup(PlayerById* player_by_id, PlayerByLevel* player_by_level);
         PlayerInGroup(const PlayerInGroup& other)=default;
         ~PlayerInGroup()=default;
 

@@ -71,7 +71,9 @@ namespace WET1 {
     template<class T>
     AVLTree<T>::~AVLTree(){
         if(this->root && this->size){
+            this->size = 0;
             delete this->root;
+            this->root = nullptr;
         }
     }
 
@@ -86,7 +88,7 @@ namespace WET1 {
         if (res == nullptr) {
             return nullptr;
         }
-        return this->root->find(data)->getData();
+        return res->getData();
     }
 
     template<class T>

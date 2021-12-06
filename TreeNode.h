@@ -111,20 +111,12 @@ namespace WET1 {
             return;
         }
 
-        if(this->left != nullptr){
-            delete this->left;
-        }
+        delete this->left;
+        delete this->right;
 
-        if(this->right != nullptr){
-            delete this->right;
-        }
-
-//        cout << "after delete left & right: " << endl;
-//        cout << this->data << endl;
-
-        T* tmp = &(this->data);
+//        T* tmp = &(this->data);
         this->gulag();
-        delete tmp;
+//        delete tmp;
     }
 
     template <class T>
