@@ -259,19 +259,8 @@ namespace WET1{
     }
 
 
-    void GameManager::Quit(){
-        delete this->players_by_id;
-        delete this->players_by_level;
-        delete this->best_player;
-        delete this->groups;
-        delete this->not_empty_groups;
-
-        this->players_by_id = nullptr;
-        this->players_by_level = nullptr;
-        this->best_player = nullptr;
-        this->groups = nullptr;
-        this->not_empty_groups= nullptr;
-
+    void GameManager::Quit(GameManager * gameManager){
+        delete gameManager;
     }
 
 
