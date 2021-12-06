@@ -62,7 +62,9 @@ namespace WET1 {
 
     template<class T>
     AVLTree<T>::~AVLTree(){
-        delete this->root;
+        if(root){
+            delete root;
+        }
     }
 
 

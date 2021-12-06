@@ -92,6 +92,9 @@ namespace WET1 {
 
     template <class T>
     TreeNode<T>::~TreeNode(){
+        if(this== nullptr){
+            return;
+        }
         if(this->left != nullptr){
             delete this->left;
         }
@@ -99,10 +102,8 @@ namespace WET1 {
         if(this->right != nullptr){
             delete this->right;
         }
-
 //        cout << "after delete left & right: " << endl;
 //        cout << this->data << endl;
-
         T* tmp = &(this->data);
         delete tmp;
     }

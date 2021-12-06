@@ -17,6 +17,13 @@ Group::Group(int group_id):group_id(group_id){
     this->best_player= nullptr;
 };
 
+Group::~Group() {
+    delete this->group_players;
+    if(this->best_player) {
+        delete this->best_player;
+    }
+}
+
 bool Group::operator==(const Group& other_group){
     return this->group_id==other_group.group_id;
 }

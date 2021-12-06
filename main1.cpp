@@ -434,25 +434,25 @@ int main(){
     g->AddGroup(2);
     g->AddPlayer(2, 2, 4);
 
-    int* best_Players;
-    g->GetGroupsHighestLevel(2, &best_Players);
+   // int* best_Players;
+   // g->GetGroupsHighestLevel(2, &best_Players);
 
-    cout << best_Players[0] << ", " << best_Players[1] << endl;
+  //  cout << best_Players[0] << ", " << best_Players[1] << endl;
 
-    g->ReplaceGroup(1, 2);
+   // g->ReplaceGroup(1, 2);
 
-    g->IncreaseLevel(1, 5);
+    //g->IncreaseLevel(1, 5);
 
-    int x = 0;
-    g->GetHighestLevel(2, &x);
+   // int x = 0;
+   // g->GetHighestLevel(2, &x);
 
-    g->RemovePlayer(2);
+   // g->RemovePlayer(2);
 
-    int* all_players;
-    int num_of_players;
-    g->GetAllPlayersByLevel(-1, &all_players, &num_of_players);
+  //  int* all_players;
+  //  int num_of_players;
+  //  g->GetAllPlayersByLevel(-1, &all_players, &num_of_players);
 
-    cout << all_players[0] << ", " << all_players[1] << endl;
+   // cout << all_players[0] << ", " << all_players[1] << endl;
 
     g->Quit();
 

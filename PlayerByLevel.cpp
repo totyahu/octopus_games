@@ -10,6 +10,11 @@ PlayerByLevel::PlayerByLevel(int player_id, int player_level, Group* player_grou
     this->player_group = player_group;
 }
 
+PlayerByLevel::~PlayerByLevel(){
+    this->player_group= nullptr;
+    return;
+}
+
 bool PlayerByLevel::operator<(const PlayerByLevel& other_player) const {
     if(this->player_level == other_player.player_level){
         return this->player_id > other_player.player_id;

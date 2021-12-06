@@ -21,7 +21,7 @@ namespace WET1{
     public:
         Group();
         explicit Group(int group_id);
-        ~Group()=default;
+        ~Group();
         bool operator==(const Group& other_group);
         bool operator<(const Group& other_group);
         bool playerExist(const PlayerByLevel& player);
