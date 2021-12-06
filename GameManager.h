@@ -20,6 +20,7 @@ namespace WET1{
         AVLTree<PlayerById> * players_by_id;
         AVLTree<PlayerByLevel> * players_by_level;
         PlayerByLevel * best_player;
+        AVLTree<GroupNotEmpty> * not_empty_groups;
 
     public:
         explicit GameManager();
