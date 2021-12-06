@@ -70,11 +70,12 @@ namespace WET1 {
 
     template<class T>
     AVLTree<T>::~AVLTree(){
-        if(this->root && this->size){
-            this->size = 0;
-            delete this->root;
-            this->root = nullptr;
-        }
+//        if(this->root && this->size){
+//            this->size = 0;
+//            delete this->root;
+//            this->root = nullptr;
+//        }
+           this->root->removeAll(root);
     }
 
 

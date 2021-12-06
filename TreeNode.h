@@ -60,6 +60,7 @@ namespace WET1 {
         static TreeNode<T> *arrayToTree(const T *sortedArr, int size);
         static TreeNode<T> *merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2);
         void print2D() const;
+        void removeAll(TreeNode<T> * node);
 
         template <typename P>
         void query(P pred, T* dest_arr, int size, int* found){
@@ -105,19 +106,19 @@ namespace WET1 {
             height(0)
     {}
 
-    template <class T>
-    TreeNode<T>::~TreeNode(){
-        if(this == nullptr){
-            return;
-        }
-
-        delete this->left;
-        delete this->right;
-
-//        T* tmp = &(this->data);
-        this->gulag();
-//        delete tmp;
-    }
+//    template <class T>
+//    TreeNode<T>::~TreeNode(){
+//        if(this == nullptr){
+//            return;
+//        }
+//
+//        delete this->left;
+//        delete this->right;
+//
+////        T* tmp = &(this->data);
+// //       this->gulag();
+////        delete tmp;
+//    }
 
     template <class T>
     TreeNode<T>* TreeNode<T>::getParent(){
@@ -551,6 +552,24 @@ namespace WET1 {
     void TreeNode<T>::print2D() const{
         // Pass initial space count as 0
         this->print2DUtil(0);
+    }
+
+    template <class T>
+    void TreeNode<T>::removeAll(TreeNode<T> * node){
+        if(node)
+        {
+            removeAll(node->left) ;
+            removeAll(node->right) ;
+            delete node;
+        }
+    }
+
+    template<class T>
+    TreeNode<T>::~TreeNode() {
+     if(&data){
+         delete &(data);
+     }
+     this->gulag();
     }
 
 }
