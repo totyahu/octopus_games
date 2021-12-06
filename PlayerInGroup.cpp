@@ -25,6 +25,14 @@ namespace WET1{
         this->by_level_instance = nullptr;
     }
 
+    PlayerInGroup::PlayerInGroup(PlayerById* player_by_id, PlayerByLevel* player_by_level){
+        this->player_id = player_by_level->getIdPlayer();
+        this->player_level = player_by_level->getLevelPlayer();
+        this->player_group = player_by_level->getGroup();
+        this->by_id_instance = player_by_id;
+        this->by_level_instance = player_by_level;
+    }
+
     bool PlayerInGroup::operator<(const PlayerInGroup& other_player) const {
         if(this->player_level == other_player.player_level){
             return this->player_id > other_player.player_id;

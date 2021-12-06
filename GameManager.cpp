@@ -47,12 +47,15 @@ namespace WET1{
 
         PlayerById* player_by_id = new PlayerById(PlayerID, Level, group);
         PlayerByLevel* player_by_level = new PlayerByLevel(PlayerID, Level, group);
-        PlayerInGroup* player_in_group = new PlayerInGroup(PlayerID, Level, group, player_by_id, player_by_level);
-
-        group->addPlayer(*player_in_group);
 
         this->players_by_id->insert(*player_by_id);
         this->players_by_level->insert((*player_by_level));
+
+        PlayerById* new_player_by_id = findPlayerById(PlayerID);
+        PlayerByLevel* new_player_by_level = findPlayerByLevel(new_player_by_id);
+
+        PlayerInGroup* player_in_group = new PlayerInGroup(PlayerID, Level, group, new_player_by_id, new_player_by_level);
+        group->addPlayer(*player_in_group);
 
         if(this->best_player != nullptr){
             if(this->best_player->operator<(*player_by_level)){
@@ -95,10 +98,7 @@ namespace WET1{
         }
 
         PlayerByLevel * player_by_level = findPlayerByLevel(player_by_id);
-        PlayerInGroup * player_in_group = new PlayerInGroup(*player_by_level);
 
-
-        player_by_id->getGroup()->increaseLevel(*player_in_group, LevelIncrease);
 
         this->players_by_level->remove(*player_by_level);
         player_by_level->increaseLevel(LevelIncrease);
@@ -108,13 +108,23 @@ namespace WET1{
         this->players_by_id->remove(*player_by_id);
         this->players_by_id->insert(*player_by_id);
 
+        PlayerById* new_player_by_id = findPlayerById(PlayerID);
+        PlayerByLevel* new_player_by_level = findPlayerByLevel(new_player_by_id);
+
+        PlayerInGroup * player_in_group = new PlayerInGroup(player_by_id, player_by_level);
+        Group* group = player_by_id->getGroup();
+        group->removePlayer(*player_in_group);
+        PlayerInGroup * new_player_in_group = new PlayerInGroup(new_player_by_id, new_player_by_level);
+        group->addPlayer(*player_in_group);
+
+
         if(this->best_player != nullptr){
-            if(this->best_player->operator<(*player_by_level)){
-                this->best_player = player_by_level;
+            if(this->best_player->operator<(*new_player_by_level)){
+                this->best_player = new_player_by_level;
             }
         }
         else{
-            this->best_player = player_by_level;
+            this->best_player = new_player_by_level;
         }
 
         return SUCCESS;
@@ -227,10 +237,16 @@ namespace WET1{
 
 
     void GameManager::Quit(){
-        delete this->groups; //TODO: make group dtor not default
         delete this->players_by_id;
         delete this->players_by_level;
         delete this->best_player;
+        delete this->groups;
+
+        this->players_by_id = nullptr;
+        this->players_by_level = nullptr;
+        this->best_player = nullptr;
+        this->groups = nullptr;
+
     }
 
 

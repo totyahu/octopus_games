@@ -1,16 +1,12 @@
 #ifndef GROUP_H
 #define GROUP_H
 
-//#pragma once
 
 #include <string>
 #include <iostream>
 #include <cstdio>
+
 #include "AVLTree.h"
-
-//#include "Group.fwd.h"
-//#include "PlayerInGroup.fwd.h"
-
 #include "common_fwd.h"
 
 

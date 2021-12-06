@@ -1,16 +1,16 @@
 #ifndef OCTOPUS_GAMES_UTILS_H
 #define OCTOPUS_GAMES_UTILS_H
 
-
 #define MAX(l,r) ((l) < (r) ? (r) : (l))
+
+#include "PlayerInGroup.h"
+//#include "Group.h"
+#include "common_fwd.h"
+
 
 namespace WET1 {
     class Utils {
     public:
-//        template<class T>
-//        static T& max(const T& n1, const T& n2){
-//            return n1 < n2 ? n2 : n1;
-//        }
 
         template<class T>
         static T* mergeArrays(T arr1[], T arr2[], int size1, int size2){
@@ -34,6 +34,7 @@ namespace WET1 {
 
             return arr_merge;
         }
+
     };
 }
 
