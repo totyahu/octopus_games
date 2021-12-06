@@ -15,4 +15,4 @@ add_executable(
         PlayerByLevel.cpp
         Group.cpp
         common_fwd.h
-)
+        GroupNotEmpty.h GroupNotEmpty.cpp)

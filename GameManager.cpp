@@ -5,6 +5,7 @@
 #include "PlayerByLevel.h"
 #include "PlayerInGroup.h"
 #include "PlayerById.h"
+#include "GroupNotEmpty.h"
 
 
 namespace WET1{
@@ -13,6 +14,7 @@ namespace WET1{
         this->players_by_level = new AVLTree<PlayerByLevel>();
         this->groups = new AVLTree<Group>();
         this->best_player = nullptr;
+        this->not_empty_groups= new AVLTree<GroupNotEmpty>();
     }
 
     GameManager * GameManager::Init() {
@@ -55,6 +57,10 @@ namespace WET1{
         PlayerByLevel* new_player_by_level = findPlayerByLevel(new_player_by_id);
 
         PlayerInGroup* player_in_group = new PlayerInGroup(PlayerID, Level, group, new_player_by_id, new_player_by_level);
+        if(group->isEmpty()){
+            GroupNotEmpty * group_not_empty=new GroupNotEmpty(group);
+           this->not_empty_groups->insert(*group_not_empty);
+        }
         group->addPlayer(*player_in_group);
 
         if(this->best_player != nullptr){
@@ -82,7 +88,14 @@ namespace WET1{
 
         this->players_by_id->remove(*player_by_id);
         this->players_by_level->remove(*player_by_level);
-        player_by_id->getGroup()->removePlayer(*player_in_group);
+        Group * group=player_by_id->getGroup();
+        group->removePlayer(*player_in_group);
+        if(group->isEmpty())
+        {
+            GroupNotEmpty * group_not_empty=new GroupNotEmpty(group);
+            this->not_empty_groups->remove(*group_not_empty);
+        }
+
         this->best_player = this->players_by_level->getMax();
         return SUCCESS;
     }
@@ -144,7 +157,6 @@ namespace WET1{
             return SUCCESS;
         }
 
-
         Group* group = findGroupById(GroupID);
         if(group == nullptr){
             return FAILURE;
@@ -169,10 +181,19 @@ namespace WET1{
         if(delete_group == nullptr || replace_group == nullptr){
             return FAILURE;
         }
+        if(!delete_group->isEmpty()){
+            if(replace_group->isEmpty()){
+                GroupNotEmpty * group_not_empty=new GroupNotEmpty(replace_group);
+                this->not_empty_groups->insert(*group_not_empty);
+            }
+            GroupNotEmpty * group_empty=new GroupNotEmpty(delete_group);
+            this->not_empty_groups->remove(*group_empty);
+        }
 
         if(!replace_group->mergeGroup(delete_group)){
             return ALLOCATION_ERROR;
         }
+
 
         this->groups->remove(*delete_group);
 
@@ -222,14 +243,16 @@ namespace WET1{
             return INVALID_INPUT;
         }
 
-        Group *non_empty_groups = new Group[numOfGroups];
-        if(!this->groups->query(non_empty_groups, groupNotEmpty, numOfGroups)){
+        if(this->not_empty_groups->getSize()!=numOfGroups){
             return FAILURE;
         }
 
+        GroupNotEmpty* tmp = new GroupNotEmpty[numOfGroups];
+        this->not_empty_groups->toSortedArray(tmp); //TODO: add a temp array of players then put ids in players array
+
         *Players = new int[numOfGroups];
         for(int i = 0; i < numOfGroups; i++){
-            (*Players)[i] = non_empty_groups[i].getBestPlayerId();
+            (*Players)[i] = tmp[i].getBestPlayerId();
         }
 
         return SUCCESS;
@@ -241,11 +264,13 @@ namespace WET1{
         delete this->players_by_level;
         delete this->best_player;
         delete this->groups;
+        delete this->not_empty_groups;
 
         this->players_by_id = nullptr;
         this->players_by_level = nullptr;
         this->best_player = nullptr;
         this->groups = nullptr;
+        this->not_empty_groups= nullptr;
 
     }
 
