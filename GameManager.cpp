@@ -47,12 +47,15 @@ namespace WET1{
 
         PlayerById* player_by_id = new PlayerById(PlayerID, Level, group);
         PlayerByLevel* player_by_level = new PlayerByLevel(PlayerID, Level, group);
-        PlayerInGroup* player_in_group = new PlayerInGroup(PlayerID, Level, group, player_by_id, player_by_level);
-
-        group->addPlayer(*player_in_group);
 
         this->players_by_id->insert(*player_by_id);
         this->players_by_level->insert((*player_by_level));
+
+        PlayerById* new_player_by_id = findPlayerById(PlayerID);
+        PlayerByLevel* new_player_by_level = findPlayerByLevel(new_player_by_id);
+
+        PlayerInGroup* player_in_group = new PlayerInGroup(PlayerID, Level, group, new_player_by_id, new_player_by_level);
+        group->addPlayer(*player_in_group);
 
         if(this->best_player != nullptr){
             if(this->best_player->operator<(*player_by_level)){

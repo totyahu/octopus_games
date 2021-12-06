@@ -68,7 +68,7 @@ namespace WET1{
     }
 
 
-    void updateGroup(PlayerInGroup* player, void* new_group){
+    void updateGroup(PlayerInGroup * player, void * new_group){
         if(!(player->getGroup() == (Group*)new_group)){
             player->changeGroup((Group*)new_group);
         }

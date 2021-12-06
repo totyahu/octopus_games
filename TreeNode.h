@@ -107,24 +107,19 @@ namespace WET1 {
 
     template <class T>
     TreeNode<T>::~TreeNode(){
-        if(this == nullptr){
-            return;
+        if(this != nullptr){
+            if(this->left != nullptr){
+                delete this->left;
+            }
+
+            if(this->right != nullptr){
+                delete this->right;
+            }
+
+            T* tmp = &(this->data);
+            this->gulag();
+            delete tmp;
         }
-
-        if(this->left != nullptr){
-            delete this->left;
-        }
-
-        if(this->right != nullptr){
-            delete this->right;
-        }
-
-//        cout << "after delete left & right: " << endl;
-//        cout << this->data << endl;
-
-        T* tmp = &(this->data);
-        this->gulag();
-        delete tmp;
     }
 
     template <class T>
@@ -366,7 +361,7 @@ namespace WET1 {
                     temp->parent->right = replace;
                 }
                 temp->gulag();
-                delete temp;
+                delete temp;//check
                 return replace;
             }
             else{
@@ -397,7 +392,7 @@ namespace WET1 {
             }
 
             temp->gulag();
-            delete temp;
+            delete temp;//check
             return to_return;
         }
 

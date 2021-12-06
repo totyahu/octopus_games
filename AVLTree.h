@@ -72,6 +72,7 @@ namespace WET1 {
     AVLTree<T>::~AVLTree(){
         if(this->root && this->size){
             delete this->root;
+            this->root= nullptr;
         }
     }
 
