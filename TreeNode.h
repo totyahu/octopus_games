@@ -337,6 +337,7 @@ namespace WET1 {
             }
 
             temp->gulag();
+            //delete temp;
             return temp_parent;
         }
 
@@ -356,7 +357,7 @@ namespace WET1 {
                     temp->parent->right = replace;
                 }
                 temp->gulag();
-//                delete temp;
+                 //delete temp;
                 return replace;
             }
             else{
@@ -403,6 +404,7 @@ namespace WET1 {
             temp->left->parent = temp_parent;
             TreeNode<T> * temp_left = temp->left;
             temp->gulag();
+            //delete temp;
             return temp_left;
         }
 
@@ -416,6 +418,7 @@ namespace WET1 {
         TreeNode<T> * temp_right=temp->right;
 
         temp->gulag();
+        //delete temp;
         return temp_right;
     }
 
@@ -450,7 +453,8 @@ namespace WET1 {
             return nullptr;
         }
         if(this->right == nullptr){
-            return new T(this->data);
+          return  &(this->data);
+            //return new T(this->data);
         }
         return this->right->getMax();
     }

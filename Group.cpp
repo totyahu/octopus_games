@@ -19,9 +19,8 @@ namespace WET1{
     Group::~Group(){
             delete this->group_players;
             this->group_players = nullptr;
-            delete best_player;
-
     }
+
 
 
     bool Group::operator==(const Group& other_group){
@@ -40,12 +39,12 @@ namespace WET1{
         this->group_players->insert(player);
         if(this->best_player != nullptr){
             if(this->best_player->operator<(player)){
-                delete best_player;
-                this->best_player = new PlayerInGroup(player);
+                //delete best_player;
+                this->best_player = group_players->find(player) ;
             }
         }
         else{
-            this->best_player = new PlayerInGroup(player);//TODO:Check
+            this->best_player = group_players->find(player);//TODO:Check
         }
     }
 
@@ -53,7 +52,7 @@ namespace WET1{
         PlayerInGroup * to_remove=group_players->find(player);
         this->group_players->remove(player);
         delete to_remove;
-        delete this->best_player;
+        //delete this->best_player;
         if(!this->isEmpty()){
             this->best_player = this->group_players->getMax();
         }
@@ -104,7 +103,7 @@ namespace WET1{
         this->group_players->apply(updateGroup, this);
 
         if(*(this->best_player) < *(other_group->best_player)){
-           delete this->best_player;
+          // delete this->best_player;
             this->best_player = other_group->best_player;
             this->best_player->changeGroup(this);
         }
@@ -137,6 +136,13 @@ namespace WET1{
     void Group::toSortedArray(PlayerInGroup* dest_arr){
         this->group_players->toSortedArray(dest_arr);
     }
+
+    void Group::resGroup() {
+           this->best_player= nullptr;
+           this->group_players= nullptr;
+    }
+
+
 }
 
 

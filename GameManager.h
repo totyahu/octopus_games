@@ -24,7 +24,7 @@ namespace WET1{
 
     public:
         explicit GameManager();
-        ~GameManager()=default;
+        ~GameManager();
         GameManager *Init();
         StatusType AddGroup(int GroupID);
         StatusType AddPlayer( int PlayerID, int GroupID, int Level);
