@@ -41,5 +41,6 @@ StatusType GetGroupsHighestLevel(void *DS, int numOfGroups, int **Players){
 }
 
 void Quit(void** DS){
-    return ((GameManager*) DS)->Quit();
+     GameManager::Quit((GameManager*) *DS);
+     *DS= NULL;
 }

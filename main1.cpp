@@ -427,33 +427,8 @@ using namespace WET1;
 
 int main(){
     GameManager* g = new GameManager();
-    g->AddGroup(1);
-    g->AddPlayer(1, 1, 5);
-    g->AddGroup(2);
-    g->AddPlayer(2, 2, 4);
 
-
-    g->ReplaceGroup(1, 2);
-
-    g->IncreaseLevel(1, 5);
-
-    int x = 0;
-    g->GetHighestLevel(2, &x);
-
-    g->RemovePlayer(1);
-
-    int* best_Players;
-    g->GetGroupsHighestLevel(1, &best_Players);
-
-    cout << best_Players[0] << endl;
-
-    int* all_players;
-    int num_of_players;
-    g->GetAllPlayersByLevel(-1, &all_players, &num_of_players);
-
-    cout << all_players[0] << endl;
-
-    g->Quit();
+    
 
     return 0;
 }
