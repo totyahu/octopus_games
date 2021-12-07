@@ -31,7 +31,7 @@ namespace WET1{
         PlayerInGroup(PlayerById* player_by_id, PlayerByLevel* player_by_level);
         PlayerInGroup(const PlayerInGroup& other)=default;
         ~PlayerInGroup()=default;
-
+        void resetPlayer();
         bool operator<(const PlayerInGroup& other_player)const;
         PlayerInGroup& operator=(const PlayerInGroup& player);
         bool operator==(const PlayerInGroup& other_player)const;

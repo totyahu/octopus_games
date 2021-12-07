@@ -40,6 +40,7 @@ namespace WET1{
         int getBestPlayerId();
         bool mergeGroup(Group* other_group);
         void printPlayers();
+        void resGroup();
 
         void toSortedArray(PlayerInGroup* dest_arr);
     };
