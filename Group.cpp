@@ -41,6 +41,7 @@ namespace WET1{
         this->group_players->insert(player);
         if(this->best_player != nullptr){
             if(this->best_player->operator<(player)){
+                delete best_player;
                 this->best_player = new PlayerInGroup(player);
             }
         }
@@ -50,7 +51,10 @@ namespace WET1{
     }
 
     void Group::removePlayer(const PlayerInGroup& player){
+        PlayerInGroup * to_remove=group_players->find(player);
         this->group_players->remove(player);
+        delete to_remove;
+        delete this->best_player;
         if(!this->isEmpty()){
             this->best_player = this->group_players->getMax();
         }

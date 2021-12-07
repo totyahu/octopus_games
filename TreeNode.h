@@ -298,8 +298,7 @@ namespace WET1 {
     void TreeNode<T>::insert(const T& data){
         if(!(this->data < data)){
             if(this->left == nullptr){
-                T * new_data= new T(data);
-                TreeNode<T>* new_tree = new TreeNode<T>(*new_data);
+                TreeNode<T>* new_tree = new TreeNode<T>(data);
                 this->left = new_tree;
                 new_tree->parent = this;
                 this->fix();
@@ -310,8 +309,7 @@ namespace WET1 {
         }
         else {
             if(this->right == nullptr){
-                T * new_data= new T(data);
-                TreeNode<T>* new_tree = new TreeNode<T>(*new_data);
+                TreeNode<T>* new_tree = new TreeNode<T>(data);
                 this->right = new_tree;
                 new_tree->parent = this;
                 this->fix();
@@ -475,13 +473,13 @@ namespace WET1 {
         }
 
         if(this->left != nullptr){
-            this->left->toSortedArrayAux(dist_arr, idx);
+            this->left->toSortedArrayAux(dist_arr, idx, size);
         }
 
         dist_arr[(*idx)++] = this->data;
 
         if(this->right != nullptr){
-            this->right->toSortedArrayAux(dist_arr, idx);
+            this->right->toSortedArrayAux(dist_arr, idx, size);
         }
     }
 
@@ -510,8 +508,11 @@ namespace WET1 {
 
         T* arr_merge = new T[size1 + size2];
         Utils::mergeArrays(arr_merge, arr1, arr2, size1, size2);
-
-        return TreeNode<T>::arrayToTree(arr_merge, size1 + size2);
+        delete[] arr1;
+        delete[] arr2;
+        TreeNode<T>* t = TreeNode<T>::arrayToTree(arr_merge, size1 + size2);
+        delete [] arr_merge;
+        return t;
     }
 
     template <class T>
@@ -588,10 +589,11 @@ namespace WET1 {
 
     template<class T>
     TreeNode<T>::~TreeNode() {
-     if(&data){
-         delete &(data);
-     }
-     this->gulag();
+        T * tmp= &data;
+        this->gulag();
+        if(tmp!= nullptr){
+            delete tmp;
+        }
     }
 
 }
