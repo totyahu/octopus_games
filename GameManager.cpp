@@ -32,6 +32,7 @@ namespace WET1{
         }
 
         this->groups->insert(*temp);
+        delete temp;
         return SUCCESS;
     }
 
@@ -53,6 +54,8 @@ namespace WET1{
         this->players_by_id->insert(*player_by_id);
         this->players_by_level->insert((*player_by_level));
 
+
+
         PlayerById* new_player_by_id = findPlayerById(PlayerID);
         PlayerByLevel* new_player_by_level = findPlayerByLevel(new_player_by_id);
 
@@ -60,16 +63,22 @@ namespace WET1{
         if(group->isEmpty()){
             GroupNotEmpty * group_not_empty=new GroupNotEmpty(group);
            this->not_empty_groups->insert(*group_not_empty);
+           delete group_not_empty;
         }
         group->addPlayer(*player_in_group);
-
+        delete player_in_group;
         if(this->best_player != nullptr){
             if(this->best_player->operator<(*player_by_level)){
                 this->best_player = player_by_level;
             }
+            else{
+                delete player_by_level;
+            }
         } else{
             this->best_player = player_by_level;
         }
+        delete player_by_id;
+
         return SUCCESS;
     }
 
@@ -90,13 +99,27 @@ namespace WET1{
         this->players_by_level->remove(*player_by_level);
         Group * group=player_by_id->getGroup();
         group->removePlayer(*player_in_group);
+        delete player_by_level;
+        delete player_by_id;
+        delete player_in_group;
+
         if(group->isEmpty())
         {
             GroupNotEmpty * group_not_empty = new GroupNotEmpty(group);
+            GroupNotEmpty * group_not_empty_to_remove=not_empty_groups->find(*group_not_empty);
             this->not_empty_groups->remove(*group_not_empty);
+            delete group_not_empty;
+            delete group_not_empty_to_remove;
         }
 
-        this->best_player = this->players_by_level->getSize() ? this->players_by_level->getMax() : nullptr;
+        delete best_player;
+        if(this->players_by_level->getSize()){
+            best_player = this->players_by_level->getMax();
+        }else{
+            best_player= nullptr;
+        }
+
+
         return SUCCESS;
     }
 
@@ -119,26 +142,32 @@ namespace WET1{
         player_by_level->increaseLevel(LevelIncrease);
         this->players_by_level->insert(*player_by_level);
 
+
         player_by_id->increaseLevel(LevelIncrease);
         this->players_by_id->remove(*player_by_id);
         this->players_by_id->insert(*player_by_id);
+        delete player_by_id;
 
         PlayerById* new_player_by_id = findPlayerById(PlayerID);
         PlayerByLevel* new_player_by_level = findPlayerByLevel(new_player_by_id);
         group->removePlayer(*player_in_group);
+        delete player_in_group;
         PlayerInGroup * new_player_in_group = new PlayerInGroup(new_player_by_id, new_player_by_level);
         group->addPlayer(*new_player_in_group);
+        delete new_player_in_group;
 
 
         if(this->best_player != nullptr){
             if(this->best_player->operator<(*new_player_by_level)){
-                this->best_player = new_player_by_level;
+                this->best_player = player_by_level;
+            }
+            else{
+                delete player_by_level;
             }
         }
         else{
-            this->best_player = new_player_by_level;
+            this->best_player = player_by_level;
         }
-
         return SUCCESS;
     }
 
@@ -184,9 +213,13 @@ namespace WET1{
             if(replace_group->isEmpty()){
                 GroupNotEmpty * group_not_empty=new GroupNotEmpty(replace_group);
                 this->not_empty_groups->insert(*group_not_empty);
+                delete group_not_empty;
             }
             GroupNotEmpty * group_empty=new GroupNotEmpty(delete_group);
+            GroupNotEmpty * group_empty_to_remove= not_empty_groups->find(*group_empty);
             this->not_empty_groups->remove(*group_empty);
+            delete group_empty;
+            delete group_empty_to_remove;
 
             if(!replace_group->mergeGroup(delete_group)){
                 return ALLOCATION_ERROR;
@@ -213,11 +246,17 @@ namespace WET1{
             }
 
             PlayerByLevel* tmp = new PlayerByLevel[*numOfPlayers];
+
             this->players_by_level->toSortedArray(tmp); //TODO: add a temp array of players then put ids in players array
-            *Players = new int[*numOfPlayers];
+            *Players =(int*) malloc(sizeof (int)*(*numOfPlayers));
+            if(*Players == NULL){
+                return ALLOCATION_ERROR;
+            }
+
             for(int i = 0; i < *numOfPlayers; i++){
                 (*Players)[*numOfPlayers - i - 1] = tmp[i].getIdPlayer();
             }
+            delete [] tmp;
             return SUCCESS;
         }
 
@@ -232,14 +271,17 @@ namespace WET1{
             return SUCCESS;
         }
 
-        *Players = new int[*numOfPlayers];
+        *Players =(int*) malloc(sizeof (int)*(*numOfPlayers));
+        if(*Players == NULL){
+            return ALLOCATION_ERROR;
+        }
 
         PlayerInGroup* tmp = new PlayerInGroup[*numOfPlayers];
         group->toSortedArray(tmp);
         for(int i = 0; i < *numOfPlayers; i++){
             (*Players)[*numOfPlayers - i - 1] = tmp[i].getIdPlayer();
         }
-
+        delete [] tmp;
         return SUCCESS;
     }
 
@@ -257,17 +299,18 @@ namespace WET1{
             return FAILURE;
         }
 
-//        GroupNotEmpty* tmp = (GroupNotEmpty*) malloc(sizeof(GroupNotEmpty) * numOfGroups);
         GroupNotEmpty* tmp = new GroupNotEmpty[numOfGroups];
         this->not_empty_groups->toSortedArray(tmp, numOfGroups);
 
-        int *players_tmp = new int[numOfGroups];
+        *Players =(int*) malloc(sizeof (int)*(numOfGroups));
+        if(*Players == NULL){
+            return ALLOCATION_ERROR;
+        }
         for(int i = 0; i < numOfGroups; i++){
-            players_tmp[i] = tmp[i].getBestPlayerId();
+            (*Players)[i] = tmp[i].getBestPlayerId();
         }
 
-        *Players = players_tmp;
-
+       delete[] tmp;
         return SUCCESS;
     }
 
@@ -280,20 +323,21 @@ namespace WET1{
     Group* GameManager::findGroupById(int groupId){
         Group* tmp = new Group(groupId);
         Group* res = this->groups->find(*tmp);
+        delete tmp;
         return res;
     }
 
     PlayerById* GameManager::findPlayerById(int playerId){
         PlayerById* tmp = new PlayerById(playerId, 0, nullptr);
         PlayerById* res = this->players_by_id->find(*tmp);
-//    delete tmp;
+        delete tmp;
         return res;
     }
 
     PlayerByLevel* GameManager::findPlayerByLevel(PlayerById* player){
         PlayerByLevel* tmp = new PlayerByLevel(player->getIdPlayer(), player->getLevelPlayer(), nullptr);
         PlayerByLevel* res = this->players_by_level->find(*tmp);
-//    delete tmp;
+        delete tmp;
         return res;
     }
 

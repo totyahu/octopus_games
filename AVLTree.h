@@ -66,7 +66,9 @@ namespace WET1 {
     }
 
     template<class T>
-    AVLTree<T>::AVLTree(TreeNode<T> *tree, int size): root(tree), size(size) {}
+    AVLTree<T>::AVLTree(TreeNode<T> *tree, int size) : size(size) {
+        this->root = tree;
+    }
 
     template<class T>
     AVLTree<T>::~AVLTree(){
