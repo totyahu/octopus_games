@@ -27,8 +27,8 @@ namespace WET1{
         PlayerByLevel(int player_id, int player_level, Group* player_group);
         PlayerByLevel(const PlayerByLevel& other)=default;
         ~PlayerByLevel()=default;
-        bool operator<(const PlayerByLevel& other_player)const;
         PlayerByLevel& operator=(const PlayerByLevel& player);
+        bool operator<(const PlayerByLevel& other_player)const;
         bool operator==(const PlayerByLevel& other_player)const;
         void increaseLevel(int LevelIncrease);
         int getIdPlayer() const;

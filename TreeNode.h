@@ -475,13 +475,13 @@ namespace WET1 {
         }
 
         if(this->left != nullptr){
-            this->left->toSortedArrayAux(dist_arr, idx);
+            this->left->toSortedArrayAux(dist_arr, idx, size);
         }
 
         dist_arr[(*idx)++] = this->data;
 
         if(this->right != nullptr){
-            this->right->toSortedArrayAux(dist_arr, idx);
+            this->right->toSortedArrayAux(dist_arr, idx, size);
         }
     }
 
