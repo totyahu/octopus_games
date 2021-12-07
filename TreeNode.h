@@ -37,7 +37,7 @@ namespace WET1 {
         void roll();
         TreeNode<T> *fix(bool stop_at_root = false);
         void gulag();
-        void toSortedArrayAux(T* dist_arr, int *idx) const;
+        void toSortedArrayAux(T* dist_arr, int *idx, int size=-1) const;
         static TreeNode<T> *arrayToTreeAux(const T *sortedArr, int startIdx, int size, TreeNode<T> *parent);
         void print2DUtil(int space) const;
 
@@ -56,7 +56,7 @@ namespace WET1 {
         TreeNode<T> *remove(const T &data);
         TreeNode<T> *removeNode(const T &data);
         T* getMax();
-        void toSortedArray(T* dist_arr) const;
+        void toSortedArray(T* dist_arr, int size=-1) const;
         static TreeNode<T> *arrayToTree(const T *sortedArr, int size);
         static TreeNode<T> *merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2);
         void print2D() const;
@@ -172,9 +172,11 @@ namespace WET1 {
         this->right->left = this;
         this->parent = this->right;
         this->right = right_left;
-
-
+        if(right_left!= nullptr){
+            right_left->parent=this;//new
+        }
         this->parent->parent=old_parent;
+
     }
 
     template <class T>
@@ -200,8 +202,9 @@ namespace WET1 {
         this->left->right = this;
         this->parent = this->left;
         this->left = left_right;
-
-
+        if(left_right!= nullptr){
+            left_right->parent= this;//new
+        }
         this->parent->parent=old_parent;
     }
 
@@ -350,6 +353,7 @@ namespace WET1 {
             if(replace->left == nullptr){
                 replace->left=temp->left;
                 replace->parent=temp->parent;
+                temp->left->parent=replace;
 
                 int who_am_i = temp->whoAmI();
                 if(who_am_i == LEFT){
@@ -359,7 +363,7 @@ namespace WET1 {
                     temp->parent->right = replace;
                 }
                 temp->gulag();
-                delete temp;
+//                delete temp;
                 return replace;
             }
             else{
@@ -390,7 +394,7 @@ namespace WET1 {
             }
 
             temp->gulag();
-            delete temp;
+          //delete temp;
             return to_return;
         }
 
@@ -459,13 +463,17 @@ namespace WET1 {
     }
 
     template <class T>
-    void TreeNode<T>::toSortedArray(T* dist_arr) const{
+    void TreeNode<T>::toSortedArray(T* dist_arr, int size) const{
         int idx = 0;
-        return this->toSortedArrayAux(dist_arr, &idx);
+        return this->toSortedArrayAux(dist_arr, &idx, size);
     }
 
     template <class T>
-    void TreeNode<T>::toSortedArrayAux(T* dist_arr, int* idx) const{
+    void TreeNode<T>::toSortedArrayAux(T* dist_arr, int* idx, int size) const{
+        if(size != -1 && *idx >= size){
+            return;
+        }
+
         if(this->left != nullptr){
             this->left->toSortedArrayAux(dist_arr, idx);
         }
@@ -479,6 +487,20 @@ namespace WET1 {
 
     template <class T>
     TreeNode<T>* TreeNode<T>::merge(const TreeNode<T> *tree1, const TreeNode<T> *tree2, int size1, int size2){
+        if(!size1 && !size2){
+            return nullptr;
+        }
+        if(!size1 && size2){
+            T* arr2 = new T[size2];
+            tree2->toSortedArray(arr2);
+            return TreeNode<T>::arrayToTree(arr2,  size2);
+        }
+        if(size1 && !size2){
+            T* arr1 = new T[size1];
+            tree1->toSortedArray(arr1);
+            return TreeNode<T>::arrayToTree(arr1,  size1);
+        }
+
         T* arr1 = new T[size1];
         T* arr2 = new T[size2];
 
