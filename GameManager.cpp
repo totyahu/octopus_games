@@ -18,7 +18,7 @@ namespace WET1{
     }
 
     GameManager * GameManager::Init() {
-        return new GameManager;
+        return new GameManager();
     }
 
     StatusType GameManager::AddGroup(int GroupID){
@@ -79,7 +79,7 @@ namespace WET1{
         }
 
         PlayerById* player_by_id = findPlayerById(PlayerID);
-        if(players_by_id== nullptr){
+        if(!player_by_id){
             return FAILURE;
         }
 
@@ -92,11 +92,11 @@ namespace WET1{
         group->removePlayer(*player_in_group);
         if(group->isEmpty())
         {
-            GroupNotEmpty * group_not_empty=new GroupNotEmpty(group);
+            GroupNotEmpty * group_not_empty = new GroupNotEmpty(group);
             this->not_empty_groups->remove(*group_not_empty);
         }
 
-        this->best_player = this->players_by_level->getMax();
+        this->best_player = this->players_by_level->getSize() ? this->players_by_level->getMax() : nullptr;
         return SUCCESS;
     }
 
@@ -111,6 +111,8 @@ namespace WET1{
         }
 
         PlayerByLevel * player_by_level = findPlayerByLevel(player_by_id);
+        Group* group = player_by_id->getGroup();
+        PlayerInGroup * player_in_group = new PlayerInGroup(player_by_id, player_by_level);
 
 
         this->players_by_level->remove(*player_by_level);
@@ -123,12 +125,9 @@ namespace WET1{
 
         PlayerById* new_player_by_id = findPlayerById(PlayerID);
         PlayerByLevel* new_player_by_level = findPlayerByLevel(new_player_by_id);
-
-        PlayerInGroup * player_in_group = new PlayerInGroup(player_by_id, player_by_level);
-        Group* group = player_by_id->getGroup();
         group->removePlayer(*player_in_group);
         PlayerInGroup * new_player_in_group = new PlayerInGroup(new_player_by_id, new_player_by_level);
-        group->addPlayer(*player_in_group);
+        group->addPlayer(*new_player_in_group);
 
 
         if(this->best_player != nullptr){
@@ -188,11 +187,12 @@ namespace WET1{
             }
             GroupNotEmpty * group_empty=new GroupNotEmpty(delete_group);
             this->not_empty_groups->remove(*group_empty);
+
+            if(!replace_group->mergeGroup(delete_group)){
+                return ALLOCATION_ERROR;
+            }
         }
 
-        if(!replace_group->mergeGroup(delete_group)){
-            return ALLOCATION_ERROR;
-        }
 
 
         this->groups->remove(*delete_group);
@@ -207,11 +207,16 @@ namespace WET1{
 
         if(GroupID < 0){
             *numOfPlayers = this->players_by_level->getSize();
+            if(*numOfPlayers == 0){
+                *Players = nullptr;
+                return SUCCESS;
+            }
+
             PlayerByLevel* tmp = new PlayerByLevel[*numOfPlayers];
             this->players_by_level->toSortedArray(tmp); //TODO: add a temp array of players then put ids in players array
             *Players = new int[*numOfPlayers];
             for(int i = 0; i < *numOfPlayers; i++){
-                (*Players)[i] = tmp[i].getIdPlayer();
+                (*Players)[*numOfPlayers - i - 1] = tmp[i].getIdPlayer();
             }
             return SUCCESS;
         }
@@ -222,12 +227,17 @@ namespace WET1{
         }
 
         *numOfPlayers = group->getSize();
+        if(*numOfPlayers == 0){
+            *Players = nullptr;
+            return SUCCESS;
+        }
+
         *Players = new int[*numOfPlayers];
 
         PlayerInGroup* tmp = new PlayerInGroup[*numOfPlayers];
         group->toSortedArray(tmp);
         for(int i = 0; i < *numOfPlayers; i++){
-            *Players[i] = tmp[i].getIdPlayer();
+            (*Players)[*numOfPlayers - i - 1] = tmp[i].getIdPlayer();
         }
 
         return SUCCESS;
@@ -243,17 +253,20 @@ namespace WET1{
             return INVALID_INPUT;
         }
 
-        if(this->not_empty_groups->getSize()!=numOfGroups){
+        if(this->not_empty_groups->getSize() < numOfGroups){
             return FAILURE;
         }
 
+//        GroupNotEmpty* tmp = (GroupNotEmpty*) malloc(sizeof(GroupNotEmpty) * numOfGroups);
         GroupNotEmpty* tmp = new GroupNotEmpty[numOfGroups];
-        this->not_empty_groups->toSortedArray(tmp); //TODO: add a temp array of players then put ids in players array
+        this->not_empty_groups->toSortedArray(tmp, numOfGroups);
 
-        *Players = new int[numOfGroups];
+        int *players_tmp = new int[numOfGroups];
         for(int i = 0; i < numOfGroups; i++){
-            (*Players)[i] = tmp[i].getBestPlayerId();
+            players_tmp[i] = tmp[i].getBestPlayerId();
         }
+
+        *Players = players_tmp;
 
         return SUCCESS;
     }
@@ -283,6 +296,8 @@ namespace WET1{
 //    delete tmp;
         return res;
     }
+
+
 }
 
 

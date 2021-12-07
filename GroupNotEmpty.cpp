@@ -6,7 +6,7 @@
 
  namespace WET1{
      GroupNotEmpty::GroupNotEmpty(){
-         group= nullptr;
+         this->group = nullptr;
      }
 
      GroupNotEmpty::GroupNotEmpty(Group * group){
