@@ -43,10 +43,10 @@ namespace WET1 {
 
     public:
         TreeNode() = delete;
-        explicit TreeNode(const T &data);
+        explicit TreeNode(const T& data);
 //        TreeNode(const TreeNode& tree);
 //        TreeNode<T>& operator=(const TreeNode<T>& tree);
-        ~TreeNode();
+        ~TreeNode()=default;
 
         bool isLeaf() const;
         T* getData() ;
@@ -98,13 +98,8 @@ namespace WET1 {
 
     template <class T>
     TreeNode<T>::TreeNode(const T& data):
-            data(data),
-//            data(new T(data)),
-            parent(nullptr),
-            right(nullptr),
-            left(nullptr),
-            height(0)
-    {}
+    data(data),parent(nullptr),left(nullptr),right(nullptr),height(0){
+    }
 
 //    template <class T>
 //    TreeNode<T>::~TreeNode(){
@@ -579,7 +574,7 @@ namespace WET1 {
 
     template <class T>
     void TreeNode<T>::removeAll(TreeNode<T> * node){
-        if(node)
+        if(node!= nullptr)
         {
             removeAll(node->left) ;
             removeAll(node->right) ;
@@ -587,14 +582,14 @@ namespace WET1 {
         }
     }
 
-    template<class T>
-    TreeNode<T>::~TreeNode() {
-        T * tmp= &data;
-        this->gulag();
-        if(tmp!= nullptr){
-            delete tmp;
-        }
-    }
+//    template<class T>
+//    TreeNode<T>::~TreeNode() {
+//        T * tmp= &data;
+//        this->gulag();
+//        if(tmp!= nullptr){
+//            delete tmp;
+//        }
+//    }
 
 }
 

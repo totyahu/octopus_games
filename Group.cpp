@@ -17,11 +17,10 @@ namespace WET1{
     }
 
     Group::~Group(){
-        if(this->group_players){
             delete this->group_players;
             this->group_players = nullptr;
             delete best_player;
-        }
+
     }
 
 
@@ -105,6 +104,7 @@ namespace WET1{
         this->group_players->apply(updateGroup, this);
 
         if(*(this->best_player) < *(other_group->best_player)){
+           delete this->best_player;
             this->best_player = other_group->best_player;
             this->best_player->changeGroup(this);
         }
