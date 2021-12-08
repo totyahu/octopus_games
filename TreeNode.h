@@ -450,6 +450,7 @@ namespace WET1 {
             return nullptr;
         }
         if(this->right == nullptr){
+//            return &(this->data);
             return new T(this->data);
         }
         return this->right->getMax();
@@ -463,7 +464,7 @@ namespace WET1 {
 
     template <class T>
     void TreeNode<T>::toSortedArrayAux(T* dist_arr, int* idx, int size) const{
-        if(size != -1 && *idx >= size){
+        if(size != -1 && (*idx) >= size){
             return;
         }
 

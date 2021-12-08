@@ -66,7 +66,8 @@ namespace WET1 {
     }
 
     template<class T>
-    AVLTree<T>::AVLTree(TreeNode<T> *tree, int size) : size(size) {
+    AVLTree<T>::AVLTree(TreeNode<T> *tree, int size) {
+        this->size = size;
         this->root = tree;
     }
 
@@ -77,7 +78,8 @@ namespace WET1 {
 //            delete this->root;
 //            this->root = nullptr;
 //        }
-           this->root->removeAll(root);
+        this->root->removeAll(this->root);
+        delete this->root;
     }
 
 
@@ -119,7 +121,9 @@ namespace WET1 {
     template<class T>
     void AVLTree<T>::remove(const T &data) {
         this->size -= 1;
-        this->root = this->root->remove(data);
+        if(this->root){
+            this->root = this->root->remove(data);
+        }
     }
 
     template<class T>

@@ -226,8 +226,6 @@ namespace WET1{
             }
         }
 
-
-
         this->groups->remove(*delete_group);
 
         return SUCCESS;
@@ -241,48 +239,57 @@ namespace WET1{
         if(GroupID < 0){
             *numOfPlayers = this->players_by_level->getSize();
             if(*numOfPlayers == 0){
-                *Players = nullptr;
+                *Players = NULL;
                 return SUCCESS;
             }
 
             PlayerByLevel* tmp = new PlayerByLevel[*numOfPlayers];
 
-            this->players_by_level->toSortedArray(tmp); //TODO: add a temp array of players then put ids in players array
-            *Players =(int*) malloc(sizeof (int)*(*numOfPlayers));
+            this->players_by_level->toSortedArray(tmp);
+
+            *Players = (int*)malloc(sizeof(int) * (*numOfPlayers));
             if(*Players == NULL){
+                cout << "fuck"  << endl;
                 return ALLOCATION_ERROR;
             }
+//            *Players = new int[*numOfPlayers];
 
             for(int i = 0; i < *numOfPlayers; i++){
-                (*Players)[*numOfPlayers - i - 1] = tmp[i].getIdPlayer();
+                (*Players)[i] = tmp[*numOfPlayers - i - 1].getIdPlayer();
             }
-            delete [] tmp;
+            delete[] tmp;
+            return SUCCESS;
+        }
+        else {
+            Group* group = findGroupById(GroupID);
+            if(group == nullptr){
+                return FAILURE;
+            }
+
+            *numOfPlayers = group->getSize();
+            if(*numOfPlayers == 0){
+                *Players = NULL;
+                return SUCCESS;
+            }
+
+            *Players = (int*)malloc(sizeof(int) * (*numOfPlayers));
+            if(*Players == NULL){
+                cout << "fuck"  << endl;
+                return ALLOCATION_ERROR;
+            }
+//        *Players = new int[*numOfPlayers];
+
+
+            PlayerInGroup* tmp = new PlayerInGroup[*numOfPlayers];
+            group->toSortedArray(tmp);
+            for(int i = 0; i < *numOfPlayers; i++){
+                (*Players)[i] = tmp[*numOfPlayers - i - 1].getIdPlayer();
+            }
+
+            delete[] tmp;
             return SUCCESS;
         }
 
-        Group* group = findGroupById(GroupID);
-        if(group == nullptr){
-            return FAILURE;
-        }
-
-        *numOfPlayers = group->getSize();
-        if(*numOfPlayers == 0){
-            *Players = nullptr;
-            return SUCCESS;
-        }
-
-        *Players =(int*) malloc(sizeof (int)*(*numOfPlayers));
-        if(*Players == NULL){
-            return ALLOCATION_ERROR;
-        }
-
-        PlayerInGroup* tmp = new PlayerInGroup[*numOfPlayers];
-        group->toSortedArray(tmp);
-        for(int i = 0; i < *numOfPlayers; i++){
-            (*Players)[*numOfPlayers - i - 1] = tmp[i].getIdPlayer();
-        }
-        delete [] tmp;
-        return SUCCESS;
     }
 
 
@@ -299,18 +306,20 @@ namespace WET1{
             return FAILURE;
         }
 
-        GroupNotEmpty* tmp = new GroupNotEmpty[numOfGroups];
-        this->not_empty_groups->toSortedArray(tmp, numOfGroups);
-
         *Players =(int*) malloc(sizeof (int)*(numOfGroups));
         if(*Players == NULL){
             return ALLOCATION_ERROR;
         }
+
+        GroupNotEmpty* tmp = new GroupNotEmpty[numOfGroups];
+        this->not_empty_groups->toSortedArray(tmp, numOfGroups);
+
+
         for(int i = 0; i < numOfGroups; i++){
-            (*Players)[i] = tmp[i].getBestPlayerId();
+            (*Players)[numOfGroups - i - 1] = tmp[numOfGroups - i - 1].getBestPlayerId();
         }
 
-       delete[] tmp;
+//       delete[] tmp;
         return SUCCESS;
     }
 
