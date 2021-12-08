@@ -86,6 +86,12 @@ namespace WET1{
                   <<",l: "<<player.player_level<<", No group "<<endl;
 
     }
+
+
+    void PlayerInGroup::resetPlayer() {
+       this->by_id_instance= nullptr;
+       this->by_level_instance= nullptr;
+    }
 }
 
 

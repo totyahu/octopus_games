@@ -28,11 +28,13 @@ namespace WET1{
 
         Group * temp = new Group(GroupID);
         if(this->groups->exists(*temp)){
+             delete temp;
             return FAILURE;
         }
 
         this->groups->insert(*temp);
-       // delete temp;
+        temp->resGroup();
+        delete temp;
         return SUCCESS;
     }
 
@@ -68,16 +70,14 @@ namespace WET1{
         group->addPlayer(*player_in_group);
         delete player_in_group;
         if(this->best_player != nullptr){
-            if(this->best_player->operator<(*player_by_level)){
-                this->best_player = player_by_level;
+            if(this->best_player->operator<(*new_player_by_level)){
+                this->best_player = new_player_by_level;
             }
-            else{
-                delete player_by_level;
-            }
-        } else{
-            this->best_player = player_by_level;
-        }
-       // delete player_by_id;
+        }   else{
+            this->best_player = new_player_by_level;
+             }
+        delete player_by_level;
+        delete player_by_id;
 
         return SUCCESS;
     }
@@ -99,20 +99,20 @@ namespace WET1{
         this->players_by_level->remove(*player_by_level);
         Group * group=player_by_id->getGroup();
         group->removePlayer(*player_in_group);
-      //  delete player_by_level;
-      //  delete player_by_id;
-      //  delete player_in_group;
+        delete player_by_level;
+        delete player_by_id;
+        delete player_in_group;
 
         if(group->isEmpty())
         {
             GroupNotEmpty * group_not_empty = new GroupNotEmpty(group);
             GroupNotEmpty * group_not_empty_to_remove=not_empty_groups->find(*group_not_empty);
             this->not_empty_groups->remove(*group_not_empty);
-      //      delete group_not_empty;
-        //    delete group_not_empty_to_remove;
+            delete group_not_empty;
+            delete group_not_empty_to_remove;
         }
 
-      //  delete best_player;
+        //delete best_player;
         if(this->players_by_level->getSize()){
             best_player = this->players_by_level->getMax();
         }else{
@@ -146,28 +146,30 @@ namespace WET1{
         player_by_id->increaseLevel(LevelIncrease);
         this->players_by_id->remove(*player_by_id);
         this->players_by_id->insert(*player_by_id);
-        delete player_by_id;
+
 
         PlayerById* new_player_by_id = findPlayerById(PlayerID);
         PlayerByLevel* new_player_by_level = findPlayerByLevel(new_player_by_id);
         group->removePlayer(*player_in_group);
-       // delete player_in_group;
+        player_in_group->resetPlayer();
+        delete player_in_group;
         PlayerInGroup * new_player_in_group = new PlayerInGroup(new_player_by_id, new_player_by_level);
         group->addPlayer(*new_player_in_group);
-       // delete new_player_in_group;
+        new_player_in_group->resetPlayer();
+        delete new_player_in_group;
+
 
 
         if(this->best_player != nullptr){
             if(this->best_player->operator<(*new_player_by_level)){
-                this->best_player = player_by_level;
-            }
-            else{
-          //      delete player_by_level;
+                this->best_player = new_player_by_level;
             }
         }
         else{
-            this->best_player = player_by_level;
+            this->best_player = new_player_by_level;
         }
+        delete player_by_id;
+        delete player_by_level;
         return SUCCESS;
     }
 
@@ -213,13 +215,13 @@ namespace WET1{
             if(replace_group->isEmpty()){
                 GroupNotEmpty * group_not_empty=new GroupNotEmpty(replace_group);
                 this->not_empty_groups->insert(*group_not_empty);
-               // delete group_not_empty;
+                delete group_not_empty;
             }
             GroupNotEmpty * group_empty=new GroupNotEmpty(delete_group);
             GroupNotEmpty * group_empty_to_remove= not_empty_groups->find(*group_empty);
             this->not_empty_groups->remove(*group_empty);
-           // delete group_empty;
-          //  delete group_empty_to_remove;
+            delete group_empty;
+            delete group_empty_to_remove;
 
             if(!replace_group->mergeGroup(delete_group)){
                 return ALLOCATION_ERROR;
@@ -227,7 +229,6 @@ namespace WET1{
         }
 
         this->groups->remove(*delete_group);
-
         return SUCCESS;
     }
 
@@ -332,22 +333,29 @@ namespace WET1{
     Group* GameManager::findGroupById(int groupId){
         Group* tmp = new Group(groupId);
         Group* res = this->groups->find(*tmp);
-       // delete tmp;
+        delete tmp;
         return res;
     }
 
     PlayerById* GameManager::findPlayerById(int playerId){
         PlayerById* tmp = new PlayerById(playerId, 0, nullptr);
         PlayerById* res = this->players_by_id->find(*tmp);
-     //   delete tmp;
+        delete tmp;
         return res;
     }
 
     PlayerByLevel* GameManager::findPlayerByLevel(PlayerById* player){
         PlayerByLevel* tmp = new PlayerByLevel(player->getIdPlayer(), player->getLevelPlayer(), nullptr);
         PlayerByLevel* res = this->players_by_level->find(*tmp);
-       // delete tmp;
+        delete tmp;
         return res;
+    }
+
+    GameManager::~GameManager() {
+         delete players_by_level;
+         delete players_by_id;
+         delete groups;
+         delete not_empty_groups;
     }
 
 
