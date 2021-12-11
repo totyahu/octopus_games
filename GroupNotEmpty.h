@@ -24,7 +24,7 @@ namespace WET1{
     public:
         GroupNotEmpty();
         explicit GroupNotEmpty(Group * group);
-        ~GroupNotEmpty()=default;
+        ~GroupNotEmpty();
         bool operator==(const GroupNotEmpty& other_group);
         bool operator<(const GroupNotEmpty& other_group);
         int getHighestLevel();

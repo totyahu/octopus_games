@@ -438,3 +438,15 @@ GroupIndex	||	Player
 3	||	938
 4	||	830
 5	||	358
+6	||	1252
+7	||	1090
+8	||	1028
+9	||	481
+10	||	1310
+11	||	1176
+and there are no more players!
+RemovePlayer: SUCCESS
+ReplaceGroup: SUCCESS
+Highest level player is: 1196
+IncreaseLevel: SUCCESS
+Highest level player is: 1176

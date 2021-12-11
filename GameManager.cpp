@@ -73,9 +73,11 @@ namespace WET1{
             if(this->best_player->operator<(*new_player_by_level)){
                 this->best_player = new_player_by_level;
             }
-        }   else{
+        }
+        else{
             this->best_player = new_player_by_level;
-             }
+        }
+
         delete player_by_level;
         delete player_by_id;
 
@@ -97,7 +99,8 @@ namespace WET1{
 
         this->players_by_id->remove(*player_by_id);
         this->players_by_level->remove(*player_by_level);
-        Group * group=player_by_id->getGroup();
+
+        Group * group = player_by_id->getGroup();
         group->removePlayer(*player_in_group);
         delete player_by_level;
         delete player_by_id;
@@ -106,7 +109,7 @@ namespace WET1{
         if(group->isEmpty())
         {
             GroupNotEmpty * group_not_empty = new GroupNotEmpty(group);
-            GroupNotEmpty * group_not_empty_to_remove=not_empty_groups->find(*group_not_empty);
+            GroupNotEmpty * group_not_empty_to_remove = this->not_empty_groups->find(*group_not_empty);
             this->not_empty_groups->remove(*group_not_empty);
             delete group_not_empty;
             delete group_not_empty_to_remove;
@@ -213,7 +216,7 @@ namespace WET1{
         }
         if(!delete_group->isEmpty()){
             if(replace_group->isEmpty()){
-                GroupNotEmpty * group_not_empty=new GroupNotEmpty(replace_group);
+                GroupNotEmpty * group_not_empty = new GroupNotEmpty(replace_group);
                 this->not_empty_groups->insert(*group_not_empty);
                 delete group_not_empty;
             }
@@ -257,7 +260,9 @@ namespace WET1{
 
             for(int i = 0; i < *numOfPlayers; i++){
                 (*Players)[i] = tmp[*numOfPlayers - i - 1].getIdPlayer();
+//                delete &(tmp[*numOfPlayers - i - 1]);
             }
+
             delete[] tmp;
             return SUCCESS;
         }
@@ -285,6 +290,7 @@ namespace WET1{
             group->toSortedArray(tmp);
             for(int i = 0; i < *numOfPlayers; i++){
                 (*Players)[i] = tmp[*numOfPlayers - i - 1].getIdPlayer();
+//                delete &(tmp[*numOfPlayers - i - 1]);
             }
 
             delete[] tmp;
@@ -318,6 +324,7 @@ namespace WET1{
 
         for(int i = 0; i < numOfGroups; i++){
             (*Players)[numOfGroups - i - 1] = tmp[numOfGroups - i - 1].getBestPlayerId();
+//            delete &(tmp[numOfGroups - i - 1]);
         }
 
 //       delete[] tmp;

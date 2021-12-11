@@ -79,8 +79,11 @@ namespace WET1 {
 //            delete this->root;
 //            this->root = nullptr;
 //        }
-        this->root->removeAll(this->root);
-        delete this->root;
+        if(this->root){
+            this->root->removeAll(this->root);
+//            delete this->root;
+            this->root = nullptr;
+        }
     }
 
 

@@ -12,16 +12,14 @@ namespace WET1{
     }
 
     Group::Group(int group_id):group_id(group_id){
-        this->group_players = new AVLTree<PlayerInGroup>;
+        this->group_players = new AVLTree<PlayerInGroup>();
         this->best_player = nullptr;
     }
 
     Group::~Group(){
-            delete this->group_players;
-            this->group_players = nullptr;
+        delete this->group_players;
+        this->group_players = nullptr;
     }
-
-
 
     bool Group::operator==(const Group& other_group){
         return this->group_id == other_group.group_id;

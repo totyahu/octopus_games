@@ -29,4 +29,8 @@
         return group->getBestPlayerId();
     }
 
-}
+     GroupNotEmpty::~GroupNotEmpty() {
+         this->group = nullptr;
+     }
+
+ }

@@ -89,9 +89,14 @@ namespace WET1{
 
 
     void PlayerInGroup::resetPlayer() {
-       this->by_id_instance= nullptr;
-       this->by_level_instance= nullptr;
+       this->by_id_instance = nullptr;
+       this->by_level_instance = nullptr;
+       this->player_group = nullptr;
     }
+
+//    PlayerInGroup::~PlayerInGroup() {
+//        this->resetPlayer();
+//    }
 }
 
 
